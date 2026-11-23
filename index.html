@@ -462,6 +462,7 @@ function stopHTML(d, b, n, mood, bi, nextId){
       var a = x.a, hi = moodTag(a,mood);
       var bits = []; var La = legFor(d, bi, a); if(La) bits.push(La.txt.replace("About ","~")); bits.push(costLabel(a)); if(flagWarn(a)) bits.push('<span class="cv">Confirm</span>');
       h += '<li class="'+(hi?'hi':'')+'"><span class="n"><button type="button" class="namebtn" data-open="o:'+b.id+':'+x.i+'">'+esc(a.n)+'</button></span><span class="s">'+bits.map(function(s){ return s.indexOf("<span")===0?s:esc(s); }).join(" · ")+'</span>';
+      var ak = keyLine(a); if(ak) h += '<span class="d">'+esc(ak)+'</span>';
       if(a.first) h += '<span class="d"><b class="fz">Do first</b> '+esc(a.first)+'</span>';
       h += '<span class="ab">'+mapBtns(a,true)+'<button type="button" class="btn" data-swap="'+b.id+'" data-i="'+x.i+'">Swap</button></span></li>';
     });
