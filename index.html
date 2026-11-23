@@ -175,6 +175,14 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 .rdir button{border:0;background:none;color:var(--dim);font:600 12.5px var(--text);padding:6px 12px;border-radius:999px;min-height:36px}
 .rdir button[aria-pressed="true"]{background:var(--pg);color:var(--on-pg)}
 .alts li.altr .n{color:var(--dim)}
+/* accents on tab pages */
+.mrow>span:first-child{color:var(--pg);font-weight:700}
+.sect .alts .s{color:var(--time)}
+.sect .alts .s .cv{display:inline-block;background:var(--warn);color:var(--bg);border-radius:999px;padding:0 7px;font-weight:700}
+.sect .alts .s .okc{display:inline-block;color:var(--ok);font-weight:700}
+.sect .alts .btn svg,.rnow .btn:not(.pri) svg{stroke:var(--pg)}
+.alts .num{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:9px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--pg);color:var(--pg);font:700 11px var(--mono);font-style:normal;vertical-align:1px}
+.alts li.altr .num{box-shadow:inset 0 0 0 2px var(--dim);color:var(--dim)}
 /* ---------- day at a glance ---------- */
 .glance{margin-top:22px;max-width:780px}
 .gap{display:flex;align-items:center;gap:10px;padding:10px 0;font:700 15px var(--text);color:var(--hi);border-top:1px solid var(--rule)}
@@ -496,7 +504,7 @@ function renderFood(){
     h += '<section class="sect gut rv"><div class="mrow"><span>'+esc(d.date)+'</span><span>'+d.blocks.filter(function(b){return b.meal;}).length+' meals</span></div>';
     d.blocks.filter(function(b){ return b.meal; }).forEach(function(b){
       var si = selIdx(b);
-      h += '<div class="meal"><div class="mrow"><span class="t" style="color:var(--pg)">'+esc(b.time)+'</span><span>'+esc(b.label)+'</span></div><ul class="alts">';
+      h += '<div class="meal"><div class="mrow"><span class="t" style="color:var(--time)">'+esc(b.time)+'</span><span>'+esc(b.label)+'</span></div><ul class="alts">';
       b.opts.forEach(function(o,i){
         var bits = [goLabel(o)]; if(o.dist) bits.push(o.dist); bits.push(costLabel(o)); if(!o.v) bits.push('<span class="cv">Confirm before going</span>');
         h += '<li><span class="n"><span class="tier '+(o.tier||'')+'">'+esc(o.tier||'')+'</span><button type="button" class="namebtn" data-open="o:'+b.id+':'+i+'">'+esc(o.n)+'</button>'+infoBtn('o:'+b.id+':'+i, o.n)+'</span><span class="s">'+bits.map(function(t){ return t.indexOf("<span")===0?t:esc(t); }).join(" · ")+'</span>';
@@ -513,8 +521,8 @@ function renderFood(){
 /* ---------- backup ---------- */
 var ICON_WC = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="4.5" r="1.6"/><circle cx="17" cy="4.5" r="1.6"/><path d="M5 9h4l1 6H8.5v5h-3v-5H4zM15 9h4l2 7h-2.5v4h-3v-4H13zM12 7v14"/></svg>';
 var RDIR = "out";
-function restLi(r, extra){
-  return '<li'+(r.alt?' class="altr"':'')+'><span class="n">'+esc(r.n)+'</span><span class="s">'+esc(extra)+' · '+esc(r.hours)+'</span><span class="d">'+esc(r.d)+'</span><span class="ab"><a class="btn" href="'+esc(placeURL({q:r.q}))+'" target="_blank" rel="noopener" aria-label="Apple Maps: '+esc(r.n)+'">'+ICON_MAP+'Map</a></span></li>';
+function restLi(r, extra, num){
+  return '<li'+(r.alt?' class="altr"':'')+'><span class="n">'+(num?'<i class="num">'+num+'</i>':'')+esc(r.n)+'</span><span class="s">'+esc(extra)+' · '+esc(r.hours)+'</span><span class="d">'+esc(r.d)+'</span><span class="ab"><a class="btn" href="'+esc(placeURL({q:r.q}))+'" target="_blank" rel="noopener" aria-label="Apple Maps: '+esc(r.n)+'">'+ICON_MAP+'Map</a></span></li>';
 }
 function renderRest(){
   var R = T.restrooms || {route:[],city:[]};
@@ -528,7 +536,7 @@ function renderRest(){
   h += '<section class="sect gut rv" id="rroute"><div class="mrow"><span>On the drive</span><span>Hwy 99, 152, I-5, I-580</span></div>';
   h += '<div class="pill rdir" role="group" aria-label="Direction"><button type="button" data-rdir="out" aria-pressed="'+(RDIR==="out")+'">Fresno to SF</button><button type="button" data-rdir="home" aria-pressed="'+(RDIR==="home")+'">SF to Fresno</button></div>';
   h += '<ul class="alts">';
-  list.forEach(function(r){ h += restLi(r, RDIR==="home" ? r.n.indexOf("Livermore")>-1 ? "First stop out of the city" : "In order heading home" : r.when); });
+  list.forEach(function(r,i){ h += restLi(r, RDIR==="home" ? r.n.indexOf("Livermore")>-1 ? "First stop out of the city" : "In order heading home" : r.when, i+1); });
   h += '</ul><p class="rtip">Times assume no traffic from Fresno City College. Wednesday will run slower.</p></section>';
   h += '<section class="sect gut rv"><div class="mrow"><span>In the city</span><span>Near your stops</span></div><ul class="alts">';
   R.city.forEach(function(r){ h += restLi(r, r.near); });
