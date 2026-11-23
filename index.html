@@ -15,7 +15,7 @@
 <style>
 :root{
   --bg:#000; --bg2:#121215; --fg:#FAFAFC; --hi:#FFF; --dim:#B4B4BB; --faint:rgba(255,255,255,.14); --rule:rgba(255,255,255,.24);
-  --pg:#FF6B4A; --on-pg:#000; --md:#FFFFFF; --on-md:#000; --band:color-mix(in srgb,#FFF 8%,transparent); --warn:#FFD60A; --ok:#30D158;
+  --pg:#FF6B4A; --on-pg:#000; --md:#FFFFFF; --on-md:#000; --band:color-mix(in srgb,#FFF 8%,transparent); --warn:#FFD60A; --ok:#30D158; --time:#FFD60A;
   --glass-tint:rgba(28,28,32,0); --spec:rgba(255,255,255,.22); --spec-lo:rgba(0,0,0,.4); --rim:rgba(255,255,255,.18); --drop:rgba(0,0,0,.55);
   --display:-apple-system,"SF Pro Display",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
   --text:-apple-system,"SF Pro Text",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
@@ -25,12 +25,12 @@
 }
 @media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
   --bg:#FBFBFD; --bg2:#F2F2F5; --fg:#1D1D1F; --hi:#000; --dim:#515157; --faint:rgba(29,29,31,.1); --rule:rgba(29,29,31,.22);
-  --pg:#C0391B; --on-pg:#FFF; --md:#111114; --on-md:#FFF; --band:#E2E2E8; --warn:#8A6500; --ok:#1A7F37;
+  --pg:#C0391B; --on-pg:#FFF; --md:#111114; --on-md:#FFF; --band:#E2E2E8; --warn:#8A6500; --ok:#1A7F37; --time:#8A6500;
   --glass-tint:rgba(251,251,253,.02); --spec:rgba(255,255,255,.95); --spec-lo:rgba(0,0,0,.06); --rim:rgba(0,0,0,.08); --drop:rgba(0,0,0,.12);
   color-scheme:light;}}
 :root[data-theme="light"]{
   --bg:#FBFBFD; --bg2:#F2F2F5; --fg:#1D1D1F; --hi:#000; --dim:#515157; --faint:rgba(29,29,31,.1); --rule:rgba(29,29,31,.22);
-  --pg:#C0391B; --on-pg:#FFF; --md:#111114; --on-md:#FFF; --band:#E2E2E8; --warn:#8A6500; --ok:#1A7F37;
+  --pg:#C0391B; --on-pg:#FFF; --md:#111114; --on-md:#FFF; --band:#E2E2E8; --warn:#8A6500; --ok:#1A7F37; --time:#8A6500;
   --glass-tint:rgba(251,251,253,.02); --spec:rgba(255,255,255,.95); --spec-lo:rgba(0,0,0,.06); --rim:rgba(0,0,0,.08); --drop:rgba(0,0,0,.12);
   color-scheme:light;}
 :root[data-theme="dark"]{color-scheme:dark}
@@ -177,14 +177,15 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 .alts li.altr .n{color:var(--dim)}
 /* ---------- day at a glance ---------- */
 .glance{margin-top:22px;max-width:780px}
-.gap{display:flex;align-items:center;gap:8px;padding:9px 0 9px 2px;font:700 14px var(--text);color:var(--hi);border-top:1px solid var(--rule)}
-.gap svg{width:15px;height:15px;flex:none;fill:none;stroke:var(--pg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.gap span{font-weight:500;font-size:12.5px;color:var(--dim)}
+.gap{display:flex;align-items:center;gap:10px;padding:10px 0;font:700 15px var(--text);color:var(--hi);border-top:1px solid var(--rule)}
+.gap .ic{flex:none;width:26px;height:26px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--pg);display:grid;place-items:center}
+.gap svg{width:14px;height:14px;fill:none;stroke:var(--pg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.gap .fr{font-weight:500;font-size:13px;color:var(--dim)}
 .st2{border-top:1px solid var(--rule);padding:4px 0}
 .gap+.st2{border-top:0}
 .st2.next{background:var(--bg2);border-radius:14px;padding:6px 10px;margin:2px -10px}
 .row{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:8px 0;text-align:left;min-height:52px}
-.row .tm{flex:none;width:64px;font:600 12px var(--mono);color:var(--pg);letter-spacing:.02em}
+.row .tm{flex:none;width:64px;font:700 12px var(--mono);color:var(--time);letter-spacing:.02em}
 .row .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .row .lb{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 .row .lb i{font-style:normal;border-radius:999px;padding:0 6px;margin-left:4px;font-weight:700}
@@ -423,7 +424,7 @@ function stopHTML(d, b, n, mood, bi, nextId){
   var open = OPEN[b.id]!==undefined ? OPEN[b.id] : isNext;
   var warn = flagWarn(o);
   var h = '';
-  if(L) h += '<div class="gap">'+ICON_LEG+'<b>'+esc(L.txt.replace(/^About /,"~"))+'</b><span>from '+esc(L.from)+'</span></div>';
+  if(L) h += '<div class="gap"><span class="ic">'+ICON_LEG+'</span><b>'+esc(L.txt.replace(/^About /,"~"))+'</b><span class="fr">from '+esc(L.from)+'</span></div>';
   h += '<div class="st2'+(open?' open':'')+(isNext?' next':'')+(done?' done':'')+(fits?' fits':'')+(b.rest?' rest':'')+'" id="b-'+b.id+'">';
   h += '<button type="button" class="row" data-toggle="'+b.id+'" aria-expanded="'+open+'">';
   h += '<span class="tm">'+esc(b.time)+'</span>';
