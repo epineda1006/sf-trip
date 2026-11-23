@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex, nofollow">
+<title>SF Trip</title>
+<style>
+:root{
+  --bg:#000; --bg2:#121215; --fg:#FAFAFC; --hi:#FFF; --dim:#B4B4BB; --faint:rgba(255,255,255,.14); --rule:rgba(255,255,255,.24);
+  --pg:#FF6B4A; --on-pg:#000; --warn:#FFD60A; --ok:#30D158;
+  --glass-tint:rgba(28,28,32,0); --spec:rgba(255,255,255,.22); --spec-lo:rgba(0,0,0,.4); --rim:rgba(255,255,255,.18); --drop:rgba(0,0,0,.55);
+  --display:-apple-system,"SF Pro Display",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
+  --text:-apple-system,"SF Pro Text",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#FBFBFD; --bg2:#F2F2F5; --fg:#1D1D1F; --hi:#000; --dim:#515157; --faint:rgba(29,29,31,.1); --rule:rgba(29,29,31,.22);
+  --pg:#C0391B; --on-pg:#FFF; --warn:#8A6500; --ok:#1A7F37;
+  --glass-tint:rgba(251,251,253,.02); --spec:rgba(255,255,255,.95); --spec-lo:rgba(0,0,0,.06); --rim:rgba(0,0,0,.08); --drop:rgba(0,0,0,.12);
+  color-scheme:light;}}
+:root[data-theme="light"]{
+  --bg:#FBFBFD; --bg2:#F2F2F5; --fg:#1D1D1F; --hi:#000; --dim:#515157; --faint:rgba(29,29,31,.1); --rule:rgba(29,29,31,.22);
+  --pg:#C0391B; --on-pg:#FFF; --warn:#8A6500; --ok:#1A7F37;
+  --glass-tint:rgba(251,251,253,.02); --spec:rgba(255,255,255,.95); --spec-lo:rgba(0,0,0,.06); --rim:rgba(0,0,0,.08); --drop:rgba(0,0,0,.12);
+  color-scheme:light;}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--text);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  transition:background-color .4s var(--ease),color .4s var(--ease)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px),4vw);padding-right:max(16px,env(safe-area-inset-right,0px),4vw)}
+:focus-visible{outline:2px solid var(--pg);outline-offset:3px}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+main{padding-bottom:130px;min-height:100vh}
+[hidden]{display:none!important}
+
+.fglass{background:var(--glass-tint);-webkit-backdrop-filter:blur(5px) saturate(150%);backdrop-filter:blur(5px) saturate(150%);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--spec) 45%,transparent),inset 0 -1px 0 color-mix(in srgb,var(--spec-lo) 35%,transparent),
+  inset 0 0 0 .5px var(--rim),0 10px 28px -16px color-mix(in srgb,var(--drop) 35%,transparent)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;display:flex;justify-content:center;align-items:center;gap:8px;padding-block:10px}
+.pill{display:flex;gap:2px;padding:4px;border-radius:999px;overflow-x:auto;scrollbar-width:none;max-width:calc(100% - 46px)}
+.pill::-webkit-scrollbar{display:none}
+.pill button{flex:none;border:0;background:none;border-radius:999px;padding:7px 12px;font:600 13px var(--display);color:var(--dim);transition:color .2s var(--ease),background .2s var(--ease)}
+.pill button[aria-current]{color:var(--hi);background:color-mix(in srgb,var(--pg) 24%,transparent);box-shadow:inset 0 0 0 .5px color-mix(in srgb,var(--pg) 55%,transparent)}
+.round{flex:none;width:38px;height:38px;border-radius:50%;border:0;display:grid;place-items:center;background:none}
+.round svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+@media (max-width:520px){.pill button{padding:7px 9px;font-size:12.5px}}
+.tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,calc(env(safe-area-inset-bottom,0px) + 6px));z-index:55;display:flex;gap:2px;padding:4px;border-radius:999px}
+.tabbar button{border:0;background:none;border-radius:999px;min-width:64px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--dim)}
+.tabbar b{font:700 15px var(--display);letter-spacing:-.02em}
+.tabbar span{font:600 10.5px var(--text)}
+.tabbar button[aria-current]{color:var(--hi);background:color-mix(in srgb,var(--pg) 24%,transparent)}
+.tabbar button[aria-current] b{color:var(--pg)}
+
+.mrow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 18px;font:500 11.5px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.06em;padding-bottom:12px;border-bottom:1px solid var(--rule)}
+.giant{font:700 clamp(34px,5vw,64px)/.95 var(--display);letter-spacing:-.05em;margin:16px 0 0;color:var(--hi);text-wrap:balance}
+.giant em{font-style:normal;color:var(--pg)}
+.lede{font:400 clamp(16px,1.5vw,19px)/1.35 var(--display);color:var(--dim);max-width:46ch;margin:12px 0 0;letter-spacing:-.01em}
+.big{font:700 clamp(26px,3.4vw,44px)/1 var(--display);letter-spacing:-.04em;margin:10px 0 0;color:var(--hi)}
+.mid{font:650 clamp(19px,2vw,24px)/1.15 var(--display);letter-spacing:-.025em;margin:0;color:var(--hi)}
+.hero{padding-block:clamp(26px,5vw,64px) 8px}
+.sect{padding-block:clamp(26px,4.5vw,56px)}
+.sect+.sect{border-top:1px solid var(--rule)}
+.facts{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 24px;max-width:900px}
+.facts li{padding:11px 0;border-top:1px solid var(--rule)}
+.facts span{display:block;font:500 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+.facts b{display:block;margin-top:3px;font:600 16px/1.25 var(--display);color:var(--hi)}
+.facts a{text-decoration:none}
+
+.moods{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.moods .lbl3{width:100%;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.mood{border:0;background:none;font:500 12px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--dim);padding:7px 12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--rule);transition:all .2s var(--ease)}
+.mood[aria-pressed="true"]{color:var(--on-pg);background:var(--pg);box-shadow:none}
+.moodhint{margin-top:10px;font-size:13.5px;color:var(--dim)}
+
+.line{position:relative;margin-top:26px;padding-left:34px}
+.line::before{content:"";position:absolute;left:10px;top:8px;bottom:8px;width:4px;border-radius:2px;background:var(--pg)}
+.stop{position:relative;padding:4px 0 30px}
+.stop:last-child{padding-bottom:4px}
+.stop::before{content:"";position:absolute;left:-31px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 3.5px var(--pg);transition:background .2s var(--ease)}
+.stop.rest::before{box-shadow:0 0 0 3.5px var(--dim)}
+.stop.done::before{background:var(--pg)}
+.stop.done .body{opacity:.5}
+.tagrow{display:flex;flex-wrap:wrap;gap:4px 14px;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.tagrow .t{color:var(--pg);font-weight:700}
+.tagrow .fit{color:var(--on-pg);background:var(--pg);border-radius:999px;padding:0 7px}
+.stop h3{margin:6px 0 0;font:650 clamp(19px,2vw,26px)/1.12 var(--display);letter-spacing:-.03em;color:var(--hi)}
+.stop .sub{margin:2px 0 0;font:500 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+.stop p{margin:6px 0 0;color:var(--dim);max-width:64ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:6px 18px;margin-top:10px;font-size:13.5px;max-width:760px}
+.meta span{color:var(--fg)}
+.meta i{font-style:normal;display:block;color:var(--dim);font:500 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase}
+.note{border-left:2px solid var(--pg);padding:2px 0 2px 12px;margin-top:12px;font-size:13.5px;max-width:64ch}
+.note.warn{border-color:var(--warn)}
+.note.ok{border-color:var(--ok)}
+.note .lbl{display:block;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--pg)}
+.note.warn .lbl{color:var(--warn)}
+.note.ok .lbl{color:var(--ok)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.btn{border:0;background:none;font:600 13px var(--text);padding:7px 14px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--rule);color:var(--hi);text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn.pri{background:var(--pg);color:var(--on-pg);box-shadow:none}
+.btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.alts{list-style:none;margin:10px 0 0;padding:0;max-width:760px}
+.alts li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:center;padding:10px 0;border-top:1px solid var(--rule);transition:box-shadow .2s var(--ease),padding .2s var(--ease)}
+.alts li:last-child{border-bottom:1px solid var(--rule)}
+.alts .n{font:600 15px/1.3 var(--display);color:var(--hi)}
+.alts .s{grid-column:1;font:500 11px/1.45 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--dim)}
+.alts .d{grid-column:1;font-size:13px;color:var(--dim)}
+.alts .ab{grid-row:1/span 3;grid-column:2;display:flex;gap:6px}
+.alts li.hi{box-shadow:inset 3px 0 0 var(--pg);padding-left:12px}
+.alts li.hi .n{color:var(--pg)}
+.lbl2{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-top:18px}
+.cv{color:var(--warn)}
+.okc{color:var(--ok)}
+@media (max-width:520px){.alts li{grid-template-columns:1fr}.alts .ab{grid-row:auto;grid-column:1;margin-top:6px}}
+
+.nums{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 40px;margin-top:18px}
+.nums b{display:block;font:700 clamp(36px,4.2vw,60px)/1 var(--display);letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--hi)}
+.nums b.over{color:var(--warn)}
+.nums span{display:block;margin-top:6px;color:var(--dim);font-size:13.5px}
+.track{height:4px;border-radius:2px;background:var(--faint);margin-top:18px;max-width:760px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--pg);transition:width .4s var(--ease)}
+.track i.over{background:var(--warn)}
+.rows{list-style:none;margin:16px 0 0;padding:0;max-width:760px}
+.rows li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--rule);font-variant-numeric:tabular-nums}
+.rows li:last-child{border-bottom:1px solid var(--rule)}
+.rows small{display:block;color:var(--dim);font-size:12.5px;line-height:1.4}
+.rows b{color:var(--hi);font-weight:600;white-space:nowrap}
+.rows .tot b{color:var(--pg);font-size:17px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:30px;height:30px;border-radius:50%;border:0;box-shadow:inset 0 0 0 1px var(--rule);background:none;font:600 16px var(--display);color:var(--hi)}
+.cap{margin-top:10px;font-size:13px;color:var(--dim);max-width:64ch}
+
+.checks{list-style:none;margin:14px 0 0;padding:0;max-width:760px}
+.checks li{border-top:1px solid var(--rule)}
+.checks li:last-child{border-bottom:1px solid var(--rule)}
+.checks label{display:flex;gap:12px;align-items:flex-start;padding:12px 0;cursor:pointer}
+.checks input{appearance:none;-webkit-appearance:none;flex:none;width:20px;height:20px;margin:2px 0 0;border-radius:6px;box-shadow:inset 0 0 0 1.5px var(--rule);display:grid;place-items:center;cursor:pointer}
+.checks input:checked{background:var(--pg);box-shadow:none}
+.checks input:checked::after{content:"";width:9px;height:5px;border:solid var(--on-pg);border-width:0 0 2px 2px;transform:rotate(-45deg) translate(1px,-1px)}
+.checks input:checked+span{color:var(--dim);text-decoration:line-through}
+.checks a{color:var(--pg)}
+.count{font:500 11.5px var(--mono);letter-spacing:.06em;color:var(--dim);margin-top:8px}
+
+.meal{margin-top:26px}
+.meal .mrow{border-bottom:0;padding-bottom:0}
+.tier{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:1px 8px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--rule);color:var(--dim);margin-right:6px;vertical-align:1px}
+.tier.treat{color:var(--pg);box-shadow:inset 0 0 0 1px var(--pg)}
+.picked{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
+
+.secret{margin-top:26px;max-width:760px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.secret summary{list-style:none;padding:13px 0;cursor:pointer;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between}
+.secret summary::-webkit-details-marker{display:none}
+.secret summary::after{content:"Show"}
+.secret[open] summary::after{content:"Hide"}
+.secret .in{padding:0 0 16px}
+.foot{margin-top:34px;font-size:12.5px;color:var(--dim);max-width:64ch}
+.rv{animation:rv .5s var(--ease) both}
+@keyframes rv{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-transparency:reduce){.fglass{background:var(--bg2);-webkit-backdrop-filter:none;backdrop-filter:none}}
+@media (prefers-contrast:more){:root{--rule:rgba(255,255,255,.5);--dim:#D6D6DB}}
+</style>
+</head>
+<body>
+<header class="top gut">
+  <nav class="pill fglass" id="sections" aria-label="Sections"></nav>
+  <button class="round fglass" id="themeBtn" type="button" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M5.5 18.5L7 17M17 7l1.5-1.5"/></svg></button>
+</header>
+<main id="app"></main>
+<nav class="tabbar fglass" id="days" aria-label="Days"></nav>
+
+<script>
+window.TRIP = {"hotel":{"name":"YOTEL San Francisco","addr":"1095 Market St","map":[37.781,-122.4115]},"days":[{"id":"wed","tab":"Wed","date":"Wed Nov 25","title":"Drive in, chill, Steve Lacy","weather":"Drizzle, about 64°F. Chair rain cover on.","blocks":[{"id":"w1","time":"9:00 AM","label":"Breakfast","meal":true,"opts":[{"n":"Breakfast at home in Fresno","d":"Eat before Susie's 10 AM class.","go":"home","dist":"","park":"","cost":0,"cat":"food","tier":"cheap","acc":"Home.","moods":["tired","food"],"v":true},{"n":"Drive-thru on the way to FCC","d":"Something quick near Fresno City College.","go":"drive","dist":"","park":"","cost":15,"cat":"food","tier":"cheap","acc":"Stay in the car.","moods":["tired","rainy"],"v":true},{"n":"Sit-down breakfast in Fresno","d":"A slower start while Susie is in class.","go":"drive","dist":"","park":"","cost":30,"cat":"food","tier":"mid","acc":"Pick a spot you already know is step-free.","moods":["food"],"v":true}]},{"id":"w2","time":"10:00 AM","label":"Susie's class","fixed":true,"opts":[{"n":"Susie's class at Fresno City College","d":"10 to 11 AM. Load the car, fill the gas tank, pack the chair charger.","go":"drive","dist":"","park":"","cost":0,"cat":"","acc":"Pack the rain cover where you can reach it.","moods":[],"v":true,"map":[36.7667,-119.7967]}]},{"id":"w3","time":"11:15 AM","label":"Drive to SF","fixed":true,"opts":[{"n":"Drive Fresno to San Francisco","d":"About 3 to 3.5 hours, around 190 miles. Plan one stretch-and-restroom stop near the halfway point.","go":"drive","dist":"~190 mi","park":"","cost":0,"cat":"","acc":"Pick a rest stop with accessible restrooms; big chain gas stations and outlet malls are the safest bet.","moods":["tired"],"v":true,"flag":"Day-before-Thanksgiving traffic is heavy. Leave right after class.","map":[37.781,-122.4115]}]},{"id":"w4","time":"2:45 PM","label":"Late lunch on arrival","meal":true,"opts":[{"n":"Mel's Drive-In","d":"Classic diner, burgers and shakes. Open late.","addr":"801 Mission St","map":[37.7837,-122.4034],"go":"drive","dist":"0.6 mi from hotel","park":"Park at Trinity Place first, then roll","cost":35,"cat":"food","tier":"cheap","acc":"Street level diner; restroom access unverified.","moods":["food","tired","rainy"],"web":"https://melsdrive-in.com/locations/northern-california/4th-mission/","v":true},{"n":"Souvla Hayes Valley","d":"Greek wraps and frozen yogurt. Daily 11 to 10.","addr":"517 Hayes St","map":[37.7766,-122.4243],"go":"drive","dist":"0.8 mi","park":"Street parking, blue curb or placard","cost":40,"cat":"food","tier":"cheap","acc":"Counter service; entry steps unverified.","moods":["food","photos","shopping"],"web":"https://www.souvla.com/location/hayes-valley/","v":true},{"n":"Tenroku conveyor sushi, Japantown","d":"Revolving sushi, pick cooked rolls off the belt. 11:30 to 9.","addr":"1825 Post St #215 (Kinokuniya Bldg)","map":[37.7853,-122.4303],"go":"drive","dist":"1.5 mi","park":"Japan Center garage","parkCost":8,"cost":45,"cat":"food","tier":"mid","acc":"Upstairs in the mall; elevator access unverified.","moods":["food","shopping","rainy"],"web":"https://www.sfjapantown.org/directory-jpndirectory/listing/tenroku-restaurant/","v":false},{"n":"Benihana Japantown","d":"Hibachi cooked at the table, plus cooked rolls. Taste of Benihana about $39 each.","addr":"1737 Post St","map":[37.7856,-122.4295],"go":"drive","dist":"1.5 mi","park":"Japan Center garage","parkCost":8,"cost":90,"cat":"food","tier":"treat","acc":"Ask for a table, not a hibachi stool seat.","moods":["food","rainy"],"web":"https://benihana.com/locations/sanfrancisco-ca-sf","v":false}]},{"id":"w5","time":"3:30 PM","label":"Check in and rest","rest":true,"opts":[{"n":"Check in at YOTEL and chill","d":"Check-in is 3 PM. Park at Trinity Place Garage (no in-and-out, so park once). Nap, charge the chair, get ready.","addr":"1095 Market St","map":[37.781,-122.4115],"go":"roll","dist":"Garage 0.1 mi","park":"Trinity Place, 33 8th St, $35 per night","cost":0,"cat":"","acc":"Ask the front desk for an accessible room if not already set.","moods":["tired","rainy"],"web":"https://helpcenter.yotel.com/hc/en-gb/articles/8117263480733-Where-Can-I-Park-at-YOTEL-San-Francisco","v":true},{"n":"Heart of the City Farmers Market","d":"Wednesday produce and snacks at UN Plaza, 7 AM to 5:30 PM.","addr":"UN Plaza","map":[37.7801,-122.414],"go":"roll","walk":true,"dist":"0.2 mi","park":"Walk/roll","cost":10,"cat":"treats","acc":"Flat plaza. Crowded and a bit rough around the edges.","moods":["food","shopping"],"v":false},{"n":"Westfield San Francisco Centre","d":"Indoor mall with the big dome. Good if it is still drizzling.","addr":"865 Market St","map":[37.7841,-122.4071],"go":"roll","walk":true,"dist":"0.5 mi","park":"Walk/roll along Market","cost":0,"cat":"","acc":"Elevators and accessible restrooms inside; some stores have closed, check what's open.","moods":["shopping","rainy"],"v":false},{"n":"Union Square tree and ice rink","d":"Holiday tree and rink (rink Nov 4 to Jan 18, 10 AM to 11 PM, $22 with skates). Watch from the rail.","addr":"Union Square","map":[37.788,-122.4075],"go":"roll","walk":true,"dist":"0.7 mi","park":"Walk/roll; gentle slope up from Market","cost":0,"cat":"","acc":"Square has ramps; the climb up Powell or Stockton from Market is gentle.","moods":["photos","shopping"],"web":"https://unionsquareicerink.com/plan-your-visit/","v":true}]},{"id":"w6","time":"5:00 PM","label":"Early dinner","meal":true,"opts":[{"n":"Souvla Hayes Valley","d":"Quick and filling before the show.","addr":"517 Hayes St","map":[37.7766,-122.4243],"go":"roll","walk":true,"dist":"0.4 mi from the venue","park":"Drive or roll","cost":40,"cat":"food","tier":"cheap","acc":"Counter service; entry steps unverified.","moods":["food","tired"],"web":"https://www.souvla.com/location/hayes-valley/","v":true},{"n":"Elephant Sushi Hayes Valley","d":"Opens at 5 PM, about 2 blocks from the venue. Order cooked rolls for Susie.","addr":"400 Grove St","map":[37.7775,-122.4237],"go":"roll","walk":true,"dist":"0.3 mi from the venue","park":"Roll from the hotel (0.9 mi)","cost":80,"cat":"food","tier":"mid","acc":"Wheelchair access listed on OpenTable.","moods":["food","photos"],"web":"https://www.opentable.com/r/elephant-sushi-hayes-valley-san-francisco","v":true},{"n":"Tommy's Joynt","d":"Old-school carved sandwiches. Wednesday noon to 9 PM. Kids welcome.","addr":"1101 Geary Blvd","map":[37.7857,-122.4212],"go":"drive","dist":"1 mi","park":"Street parking","cost":35,"cat":"food","tier":"cheap","acc":"Busy and tight inside; access unverified.","moods":["food","tired"],"web":"https://tommysjoynt.com/tommys-faq","v":true},{"n":"Mel's Drive-In","d":"Easy diner fallback.","addr":"801 Mission St","map":[37.7837,-122.4034],"go":"roll","walk":true,"dist":"0.6 mi","park":"Walk/roll","cost":35,"cat":"food","tier":"cheap","acc":"Street level.","moods":["tired","rainy"],"v":true}]},{"id":"w7","time":"6:45 PM","label":"Steve Lacy","fixed":true,"opts":[{"n":"Steve Lacy at Bill Graham Civic Auditorium","d":"Doors 7 PM, show 8 PM. All ages. Make sure your tickets say Nov 25 (there is also a Nov 24 show).","addr":"99 Grove St","map":[37.7785,-122.4176],"go":"roll","walk":true,"dist":"0.5 mi from hotel","park":"Leave the car at Trinity Place","cost":0,"cat":"","acc":"Accessible seating on all levels. Without ADA tickets, arrive near doors and ask the ADA liaison at the entrance.","moods":["photos"],"web":"https://billgrahamcivic.com/events/steve-lacy-261125","v":true}]},{"id":"w8","time":"10:30 PM","label":"Late-night snack","meal":true,"opts":[{"n":"Ping Yang Thai Grill & Dessert","d":"Open to midnight. Thai toast boxes and bingsoo.","addr":"955 Larkin St","map":[37.7876,-122.4182],"go":"roll","dist":"0.7 mi from venue","park":"Roll; slight uphill on Larkin","cost":25,"cat":"food","tier":"mid","acc":"Entry access unverified.","moods":["food","photos"],"web":"https://kqed.org/arts/13957599/late-night-thai-food-dessert-sf-ping-yang","v":false},{"n":"Lers Ros Thai","d":"Open to 11:59 PM. Pad see ew, curries.","addr":"730 Larkin St","map":[37.7846,-122.4178],"go":"roll","dist":"0.4 mi from venue","park":"Roll","cost":35,"cat":"food","tier":"mid","acc":"Entry access unverified.","moods":["food"],"v":false},{"n":"Big Apple Pizza N Grill","d":"Pizza slices until about 3 AM.","addr":"127 Eddy St","map":[37.7842,-122.4096],"go":"roll","dist":"0.4 mi from hotel","park":"Roll","cost":15,"cat":"food","tier":"cheap","acc":"Small counter spot.","moods":["tired","food"],"v":false},{"n":"Snacks back at the hotel","d":"Grab something before the show and head straight to bed.","go":"roll","dist":"0.5 mi","park":"","cost":10,"cat":"food","tier":"cheap","acc":"Shortest route home.","moods":["tired","rainy"],"v":true,"map":[37.781,-122.4115]}],"note":"These blocks get rough late at night. Stay together and stick to busy, lit streets."}]},{"id":"thu","tab":"Thu","date":"Thu Nov 26 · Thanksgiving","title":"Museum, bridge, beach, sunset","weather":"Dry and cloudy, about 63°F. Sunset about 4:53 PM.","holiday":"Thanksgiving. Many shops and museums are closed. Each block shows what's verified.","blocks":[{"id":"t1","time":"9:00 AM","label":"Breakfast","meal":true,"opts":[{"n":"Brenda's French Soul Food","d":"Open Thanksgiving 9 AM to 3 PM. Beignets and shrimp and grits.","addr":"652 Polk St","map":[37.7832,-122.419],"go":"roll","walk":true,"dist":"0.5 mi, flat","park":"Walk/roll","cost":45,"cat":"food","tier":"mid","acc":"Small and busy; ask for an easy table.","moods":["food","photos"],"web":"https://frenchsoulfood.com/","v":true,"flag":"Verified open Thanksgiving."},{"n":"Mel's Drive-In","d":"Diner breakfast.","addr":"801 Mission St","map":[37.7837,-122.4034],"go":"roll","walk":true,"dist":"0.6 mi","park":"Walk/roll","cost":30,"cat":"food","tier":"cheap","acc":"Street level.","moods":["tired"],"v":false,"flag":"Thanksgiving hours not posted."},{"n":"Pinecrest Diner","d":"Old diner near Union Square.","addr":"401 Geary St","map":[37.787,-122.4105],"go":"roll","walk":true,"dist":"0.7 mi","park":"Walk/roll","cost":35,"cat":"food","tier":"cheap","acc":"Access unverified.","moods":["food"],"v":false,"flag":"Thanksgiving hours not posted."},{"n":"Pastries in the room","d":"Grab pastries the night before and save time.","go":"home","dist":"","park":"","cost":15,"cat":"food","tier":"cheap","acc":"No travel.","moods":["tired","rainy"],"v":true,"map":[37.781,-122.4115]}]},{"id":"t2","time":"9:40 AM","label":"Drive to Golden Gate Park","fixed":true,"opts":[{"n":"Drive to the Music Concourse Garage","d":"About 18 minutes. Garage opens 7 AM. Reserve the planetarium show as soon as you're inside.","addr":"Music Concourse Garage","map":[37.7716,-122.4677],"go":"drive","dist":"4.5 mi","park":"Music Concourse Garage: $5/hr weekday, $35 max; holiday rate not posted","cost":0,"cat":"","acc":"33 accessible spaces near the museums, with elevators. Bring the placard.","moods":[],"web":"https://www.sfmta.com/en/node/43144","v":true}]},{"id":"t3","time":"10:00 AM","label":"Museum","opts":[{"n":"California Academy of Sciences","d":"Open Thanksgiving 10 AM to 3 PM, last entry 2 PM. Rainforest, aquarium, penguins, planetarium (reserve on the daily calendar first).","addr":"55 Music Concourse Dr","map":[37.7699,-122.4661],"go":"drive","dist":"4.5 mi","park":"Music Concourse Garage, about 6 hrs","parkCost":30,"cost":110,"cat":"museum","acc":"Step-free with elevators throughout. Accessible restrooms.","moods":["nature","rainy","photos"],"web":"https://www.calacademy.org/hours-admission","v":true,"flag":"Verified: open 10 to 3 on Thanksgiving. Adult peak price $55."},{"n":"San Francisco Botanical Garden","d":"Free on Thanksgiving per a travel guide. Paved main paths.","addr":"1199 9th Ave","map":[37.7676,-122.4691],"go":"drive","dist":"4.5 mi","park":"Music Concourse Garage","parkCost":15,"cost":0,"cat":"museum","acc":"Main paths paved; some side paths are gravel or sloped.","moods":["nature","photos","tired"],"v":false},{"n":"Japanese Tea Garden","d":"Opens 9 AM per a travel guide. Pagoda, koi ponds, tea house.","addr":"75 Hagiwara Tea Garden Dr","map":[37.7702,-122.4703],"go":"drive","dist":"4.5 mi","park":"Music Concourse Garage","parkCost":15,"cost":30,"cat":"museum","acc":"Partly accessible; the arched bridges and some paths have steps.","moods":["nature","photos"],"v":false},{"n":"Conservatory of Flowers","d":"Victorian glass greenhouse.","addr":"100 JFK Dr","map":[37.772,-122.4602],"go":"drive","dist":"4 mi","park":"Street parking on Nancy Pelosi Dr","cost":0,"cat":"museum","acc":"Accessible inside.","moods":["nature","photos"],"v":false,"flag":"Closed inside on Thanksgiving. Use the light show tonight instead."}]},{"id":"t4","time":"12:30 PM","label":"Lunch","meal":true,"opts":[{"n":"Academy Cafe (inside the museum)","d":"Pizza, burgers, grab-and-go. Lunch 11 to 4 on normal days.","addr":"Cal Academy","map":[37.7699,-122.4661],"go":"roll","dist":"Inside","park":"","cost":40,"cat":"food","tier":"mid","acc":"Inside the museum, step-free.","moods":["tired","rainy","food"],"web":"https://www.calacademy.org/dining","v":false,"flag":"Thanksgiving cafe hours not posted; likely tied to museum hours."},{"n":"Packed snacks plus a museum treat","d":"Cheapest option. Eat in the car or on a bench.","go":"home","dist":"","park":"","cost":12,"cat":"food","tier":"cheap","acc":"No travel.","moods":["tired"],"v":true,"map":[37.7699,-122.4661]},{"n":"Ebisu (Inner Sunset)","d":"Sushi spot near the park; order cooked rolls. Walk-in only.","addr":"1283 9th Ave","map":[37.765,-122.4664],"go":"drive","dist":"0.5 mi","park":"Street","cost":55,"cat":"food","tier":"treat","acc":"Access unverified.","moods":["food"],"v":false,"flag":"Thanksgiving status unknown."}]},{"id":"t5","time":"2:00 PM","label":"Rest","rest":true,"opts":[{"n":"Slow half hour in the car","d":"Sit, snack, charge phones, recline. Then head to the bridge view.","go":"home","dist":"","park":"","cost":0,"cat":"","acc":"Your own space.","moods":["tired","rainy"],"v":true,"map":[37.7712,-122.4665]},{"n":"Back to the hotel to recharge","d":"About 40 min round trip. Worth it if the chair battery is low.","addr":"1095 Market St","map":[37.781,-122.4115],"go":"drive","dist":"4.5 mi","park":"Trinity Place (no in-and-out, may pay again)","parkCost":15,"cost":0,"cat":"","acc":"Full rest.","moods":["tired"],"v":true},{"n":"Botanical Garden slow roll","d":"Easy paved loop near the garage.","addr":"1199 9th Ave","map":[37.7676,-122.4691],"go":"roll","dist":"0.3 mi","park":"Same garage","cost":0,"cat":"","acc":"Paved main paths.","moods":["nature","photos"],"v":false}]},{"id":"t6","time":"2:45 PM","label":"Golden Gate Bridge + beach","opts":[{"n":"Crissy Field East Beach","d":"Big Golden Gate Bridge view, a beach mat onto the sand, accessible restroom, flat shoreline promenade.","addr":"Crissy Field East Beach","map":[37.8059,-122.45],"go":"drive","dist":"4.5 mi, 18 min","park":"East Beach lot, accessible spaces","cost":0,"cat":"","acc":"Beach wheelchair needs 5 days' notice, so only a same-day request is possible (415-561-4700).","moods":["nature","photos"],"web":"https://www.nps.gov/goga/planyourvisit/beach-wheelchairs.htm","v":false,"flag":"Access info from a 2019 park page."},{"n":"Battery East Vista","d":"Close-up bridge view from the bluff with an accessible stretch of the Coastal Trail.","addr":"Battery East Vista","map":[37.8061,-122.4744],"go":"drive","dist":"5 mi","park":"Paid lot with accessible spaces","parkCost":5,"cost":0,"cat":"","acc":"Accessible lot and trail segment.","moods":["photos","nature"],"web":"https://www.presidio.gov/places/battery-east-vista","v":false},{"n":"Palace of Fine Arts","d":"Flat lagoon loop and the big rotunda. Great photo spot near Crissy Field.","addr":"3601 Lyon St","map":[37.8029,-122.4484],"go":"drive","dist":"4 mi","park":"Free lot nearby","cost":0,"cat":"","acc":"Flat paved paths around the lagoon.","moods":["photos","tired"],"v":false},{"n":"Golden Gate Bridge Welcome Center","d":"Viewing plaza by the toll plaza.","addr":"Golden Gate Bridge Welcome Center","map":[37.8077,-122.475],"go":"drive","dist":"5 mi","park":"Paid lot","cost":0,"cat":"","acc":"Automatic doors, accessible restrooms across the lot.","moods":["photos"],"v":true,"flag":"Welcome Center closed Thanksgiving. Plaza views may still be open."}]},{"id":"t7","time":"4:15 PM","label":"Sunset","opts":[{"n":"Ocean Beach Promenade at Beach Chalet","d":"Sunset about 4:53 PM. Watch from the paved promenade.","addr":"Ocean Beach, Great Hwy at Fulton","map":[37.7695,-122.5104],"go":"drive","dist":"20 min from Crissy","park":"Great Hwy lots","cost":0,"cat":"","acc":"Accessible routes from the lots to the promenade; restrooms at Sloat.","moods":["nature","photos","tired"],"web":"https://www.nps.gov/goga/planyourvisit/ocean-beach-accessibility.htm","v":false},{"n":"Lands End Lookout overlook","d":"Cliff view over the ocean, benches at the accessible overlook.","addr":"680 Point Lobos Ave","map":[37.7798,-122.5118],"go":"drive","dist":"15 min from Crissy","park":"El Camino del Mar or Merrie Way lot","cost":0,"cat":"","acc":"Accessible from Merrie Way to the overlook; stairs past that.","moods":["nature","photos"],"web":"https://www.nps.gov/goga/planyourvisit/lands-end-accessibility.htm","v":false,"flag":"Visitor center Thanksgiving status unknown; the overlook itself is outdoors."},{"n":"Crissy Field sunset","d":"Stay at Crissy Field and watch the light behind the bridge.","addr":"Crissy Field East Beach","map":[37.8059,-122.45],"go":"drive","dist":"0","park":"Same lot","cost":0,"cat":"","acc":"Same as before.","moods":["tired","photos"],"v":false}]},{"id":"t8","time":"5:30 PM","label":"Lights","opts":[{"n":"Conservatory of Flowers light show","d":"Free projection show on the outside of the greenhouse, nightly from about 30 min after sunset.","addr":"100 JFK Dr","map":[37.772,-122.4602],"go":"drive","dist":"10 min from Ocean Beach","park":"Street, Nancy Pelosi Dr or Bowling Green Dr","cost":0,"cat":"","acc":"Watch from the JFK promenade; paved.","moods":["photos","nature"],"web":"https://gggp.org/photosynthesis-light-show-at-the-conservatory-changes-with-the-seasons/","v":false,"flag":"Running late Nov is likely but not posted for 2026."},{"n":"Union Square tree and rink","d":"Holiday tree and skaters. Near the hotel.","addr":"Union Square","map":[37.788,-122.4075],"go":"roll","walk":true,"dist":"0.7 mi from hotel","park":"Park at hotel, roll","cost":0,"cat":"","acc":"Ramps into the square.","moods":["photos","shopping"],"web":"https://unionsquareicerink.com/plan-your-visit/","v":false,"flag":"Rink Thanksgiving hours not posted."},{"n":"Skip it, straight to dinner","d":"Save energy for Pier 39.","go":"drive","dist":"","park":"","cost":0,"cat":"","acc":"","moods":["tired"],"v":true}]},{"id":"t9","time":"6:30 PM","label":"Thanksgiving dinner","meal":true,"opts":[{"n":"Hana Zen at Pier 39","d":"Cooked rolls: shrimp tempura $8.25, Crunchy California $10.50, California Dream $13.75. Open 11 to 11 daily. Then see the sea lions and pier lights.","addr":"Pier 39, Suite M.209","map":[37.8087,-122.4098],"go":"drive","dist":"25 min","park":"Pier 39 garage (24/7)","parkCost":15,"cost":50,"cat":"food","tier":"mid","acc":"Wheelchair access listed. Upper level elevator unverified.","moods":["food","photos","shopping"],"web":"https://www.opentable.com/r/hana-zen-sushi-bar-pier-39","v":false,"flag":"Thanksgiving hours not posted. About 75% of Pier 39 shops open on the day."},{"n":"Tommy's Joynt turkey dinner","d":"$36 each, dine-in 11 AM to 8 PM, no reservations.","addr":"1101 Geary Blvd","map":[37.7857,-122.4212],"go":"drive","dist":"1 mi from hotel","park":"Street","cost":72,"cat":"food","tier":"mid","acc":"Busy; access unverified.","moods":["food","tired"],"web":"https://tommysjoynt.com/thanksgiving-faq","v":true,"flag":"Verified open Thanksgiving."},{"n":"Beach Chalet Thanksgiving dinner","d":"3 courses, $85 each plus tax, tip and a 6% surcharge. Reserve.","addr":"1000 Great Hwy","map":[37.7695,-122.5104],"go":"drive","dist":"At Ocean Beach","park":"Lot","cost":210,"cat":"food","tier":"treat","acc":"Ask about elevator to the upstairs dining room.","moods":["food","nature"],"web":"https://www.beachchalet.com/thanksgiving","v":true,"flag":"Verified Thanksgiving menu; needs a reservation."},{"n":"Fog Harbor Fish House, Pier 39","d":"Has done a Thanksgiving turkey plate in past years. Not much cooked sushi.","addr":"Pier 39, Level 2","map":[37.8087,-122.4098],"go":"drive","dist":"25 min","park":"Pier 39 garage","parkCost":15,"cost":80,"cat":"food","tier":"treat","acc":"Level 2 elevator unverified.","moods":["food","photos"],"web":"https://www.pier39.com/fog-harbor-fish-house/","v":false}]},{"id":"t10","time":"8:30 PM","label":"Back to hotel","rest":true,"opts":[{"n":"Drive back and rest","d":"About 15 minutes from Pier 39. Pack most things tonight for Friday.","addr":"1095 Market St","map":[37.781,-122.4115],"go":"drive","dist":"2.5 mi","park":"Trinity Place","cost":0,"cat":"","acc":"","moods":["tired"],"v":true},{"n":"Musee Mecanique first","d":"Free arcade of antique coin machines, normally 10 AM to 8 PM.","addr":"Pier 45","map":[37.8094,-122.4161],"go":"roll","dist":"0.4 mi from Pier 39","park":"","cost":10,"cat":"treats","acc":"Ground level; access unverified.","moods":["photos","rainy"],"v":false,"flag":"Thanksgiving hours not posted; likely closed by now."}]}]},{"id":"fri","tab":"Fri","date":"Fri Nov 27","title":"Laid back, then home","weather":"Dry and cloudy, about 63°F.","holiday":"Black Friday crowds around Union Square and malls.","blocks":[{"id":"f1","time":"8:30 AM","label":"Pack and check out","fixed":true,"opts":[{"n":"Check out of YOTEL and get the car","d":"Checkout is 11 AM, but leave early so the morning is yours. Trinity Place has no in-and-out, so leave once.","addr":"1095 Market St","map":[37.781,-122.4115],"go":"roll","dist":"","park":"Trinity Place","cost":0,"cat":"","acc":"","moods":[],"v":true}]},{"id":"f2","time":"9:15 AM","label":"Breakfast","meal":true,"opts":[{"n":"Eagle Cafe, Pier 39","d":"Banana-pecan pancakes and sourdough French toast, 8 AM to 3 PM.","addr":"Pier 39, Level 2","map":[37.8086,-122.41],"go":"drive","dist":"2.5 mi","park":"Pier 39 garage (counted in the next stop)","cost":40,"cat":"food","tier":"mid","acc":"Level 2; elevator unverified.","moods":["food","photos"],"web":"https://www.pier39.com/?p=7297","v":false},{"n":"Boudin Bakery, Fisherman's Wharf","d":"Sourdough, breakfast 8 to 11. See the bread being made.","addr":"160 Jefferson St","map":[37.8083,-122.4152],"go":"drive","dist":"2.6 mi","park":"Wharf garage (counted in the next stop)","cost":35,"cat":"food","tier":"mid","acc":"Lower level; ramp or elevator unverified.","moods":["food","photos","shopping"],"web":"https://boudinbakery.com/location/boudin-bakery-bakers-hall/","v":false},{"n":"Brenda's French Soul Food","d":"Beignets near the hotel, opens 8 AM Friday.","addr":"652 Polk St","map":[37.7832,-122.419],"go":"roll","walk":true,"dist":"0.5 mi","park":"Before getting the car","cost":45,"cat":"food","tier":"mid","acc":"Small and busy.","moods":["food"],"web":"https://frenchsoulfood.com/","v":true},{"n":"Mel's Drive-In","d":"Cheap and fast.","addr":"801 Mission St","map":[37.7837,-122.4034],"go":"roll","walk":true,"dist":"0.6 mi","park":"","cost":30,"cat":"food","tier":"cheap","acc":"Street level.","moods":["tired"],"v":false}]},{"id":"f3","time":"10:00 AM","label":"Pier 39 and the Wharf","opts":[{"n":"Bunny Cafe SF + Pier 39 sea lions","d":"Pet adoptable rabbits in the Bunny Lounge (9 AM to 1 PM), then the sea lions and the carousel.","addr":"1327 Columbus Ave","map":[37.8063,-122.4194],"go":"drive","dist":"Same area","park":"Pier 39 garage (24/7)","parkCost":15,"cost":50,"cat":"cafes","acc":"Bunny Cafe step-free entry unverified. Ask when booking.","moods":["photos","food","tired"],"web":"https://abc7news.com/post/legacy-sf-celebrity-therapy-bunny-alex-great-lives-new-cafe-petting-rescue-bunnies-open-san-francisco/18416676/","v":false,"flag":"Bunny Lounge is by paid reservation; price not posted."},{"n":"Musee Mecanique","d":"Free antique arcade, 10 AM to 8 PM. Bring quarters.","addr":"Pier 45","map":[37.8094,-122.4161],"go":"roll","dist":"0.4 mi from Pier 39","park":"Pier 39 garage","parkCost":15,"cost":10,"cat":"treats","acc":"Ground level; access unverified.","moods":["photos","rainy"],"web":"https://www.timeout.com/san-francisco/museums/musee-mecanique","v":false},{"n":"Ghirardelli Square","d":"Sundae and the famous sign. 9 AM to 10 PM.","addr":"900 North Point St","map":[37.806,-122.4229],"go":"drive","dist":"0.8 mi from Pier 39","park":"Ghirardelli garage, $18 for 0 to 3 hrs","parkCost":18,"cost":25,"cat":"treats","acc":"Hilly site; use the Beach St side and garage elevator. Unverified.","moods":["food","photos","shopping"],"web":"https://ghirardellisq.com/visit","v":false},{"n":"Aquarium of the Bay","d":"Tunnels under the bay at Pier 39.","addr":"Pier 39","map":[37.8087,-122.4098],"go":"roll","dist":"At Pier 39","park":"Pier 39 garage","parkCost":15,"cost":70,"cat":"museum","acc":"Access unverified.","moods":["nature","rainy"],"v":false}]},{"id":"f4","time":"11:30 AM","label":"Last stop","opts":[{"n":"Ferry Building + Miette","d":"Marketplace shops, bay views, Miette pastries (Mon to Fri 10 to 4).","addr":"1 Ferry Building","map":[37.7955,-122.3937],"go":"drive","dist":"1.8 mi","park":"ProPark lot, $20 first hour, $14 validated","parkCost":14,"cost":20,"cat":"treats","acc":"ADA restrooms and curb-cut drop-off.","moods":["food","shopping","photos"],"web":"https://www.ferrybuildingmarketplace.com/visit","v":false,"flag":"Black Friday hours not posted."},{"n":"KitTea Cat Lounge","d":"Cat lounge in the Mission, on the way out of town. Tue to Fri 11 AM to 8 PM.","addr":"1266 Valencia St","map":[37.7535,-122.4206],"go":"drive","dist":"4 mi","park":"Street","cost":60,"cat":"cafes","acc":"Listed as wheelchair accessible; confirm.","moods":["photos","tired","rainy"],"v":false,"flag":"Book a time; price and holiday hours not confirmed."},{"n":"Japantown","d":"Peace Pagoda photos, matcha at Maruwu Seicha, taiyaki at Uji Time, Kinokuniya books.","addr":"Japan Center","map":[37.7854,-122.4294],"go":"drive","dist":"2.5 mi","park":"Japan Center garage","parkCost":8,"cost":25,"cat":"cafes","acc":"Indoor mall with elevators.","moods":["shopping","food","photos","rainy"],"v":false},{"n":"Crissy Field (if skipped Thursday)","d":"Bridge view and the beach before driving home.","addr":"Crissy Field East Beach","map":[37.8059,-122.45],"go":"drive","dist":"3 mi","park":"East Beach lot","cost":0,"cat":"","acc":"Beach mat, accessible restroom.","moods":["nature","photos"],"v":false}]},{"id":"f5","time":"12:30 PM","label":"Lunch and head home","meal":true,"opts":[{"n":"Gott's Roadside, Ferry Building","d":"Burgers, fries, shakes. Opens 10 AM.","addr":"1 Ferry Building","map":[37.7955,-122.3937],"go":"roll","dist":"At Ferry Building","park":"Same lot","cost":35,"cat":"food","tier":"cheap","acc":"Outdoor and indoor seating.","moods":["food","tired"],"web":"https://www.gotts.com/location/sfferrybuilding","v":true},{"n":"Hana Zen cooked rolls to go","d":"If you're back at Pier 39.","addr":"Pier 39","map":[37.8087,-122.4098],"go":"drive","dist":"","park":"","cost":35,"cat":"food","tier":"mid","acc":"","moods":["food"],"v":false},{"n":"Eat on the road","d":"Stop around Gilroy or Los Banos on the drive home.","go":"drive","dist":"","park":"","cost":25,"cat":"food","tier":"cheap","acc":"Pick a big chain stop for accessible restrooms.","moods":["tired"],"v":true}]},{"id":"f6","time":"1:00 PM","label":"Drive home","fixed":true,"opts":[{"n":"Drive back to Fresno","d":"About 3 to 3.5 hours. Black Friday traffic out of the city.","go":"drive","dist":"~190 mi","park":"","cost":0,"cat":"","acc":"One rest stop halfway.","moods":["tired"],"v":true}]}]}],"backups":[{"n":"Yerba Buena Gardens","d":"Flat garden with a waterfall, near the Metreon.","map":[37.785,-122.4024],"walk":true,"dist":"0.6 mi","moods":["nature","photos","tired"],"acc":"Flat, paved.","v":false},{"n":"Salesforce Park","d":"Rooftop park over the transit center, reached by elevator.","map":[37.7895,-122.3965],"walk":false,"dist":"1.4 mi","moods":["nature","photos"],"acc":"Elevators up; flat paths.","v":false},{"n":"Sightglass Coffee SoMa","d":"Big airy roastery. Weekdays 6:30 to 5.","map":[37.7769,-122.4084],"walk":true,"dist":"0.3 mi","moods":["food","rainy","tired"],"acc":"Access unverified.","v":false},{"n":"Shoji","d":"Matcha drinks in curved booths, very photogenic.","map":[37.787,-122.4],"walk":true,"dist":"0.9 mi","moods":["food","photos"],"acc":"Access unverified.","v":false},{"n":"Mr. Holmes Bakehouse","d":"Pink neon sign and cruffins.","map":[37.787,-122.418],"walk":false,"dist":"0.8 mi, sloped street","moods":["photos","food"],"acc":"Larkin slopes there; drive and park close.","v":false},{"n":"Andytown Coffee","d":"Snowy Plover drink near Ocean Beach. Daily 7 to 5.","map":[37.7574,-122.504],"walk":false,"dist":"6 mi","moods":["food","nature"],"acc":"Access unverified.","v":false},{"n":"Miette flagship, Fillmore","d":"Cakes, macarons, candy near Japantown.","map":[37.7904,-122.4339],"walk":false,"dist":"2.5 mi","moods":["food","shopping","photos"],"acc":"Fillmore is hilly north of Sutter; park close.","v":false},{"n":"Boba Guys Union Square","d":"Boba near the tree.","map":[37.7894,-122.4067],"walk":true,"dist":"0.8 mi","moods":["food","shopping"],"acc":"Access unverified.","v":false},{"n":"Exploratorium","d":"Hands-on science museum at Pier 15. Good Friday option.","map":[37.8016,-122.3975],"walk":false,"dist":"2 mi","moods":["rainy","nature"],"acc":"Step-free.","v":false},{"n":"de Young Museum and tower","d":"Free observation tower view.","map":[37.7715,-122.4686],"walk":false,"dist":"4.5 mi","moods":["photos","rainy"],"acc":"Elevators.","v":false,"flag":"Closed Thanksgiving."}],"avoid":["Lombard St, Nob Hill and Russian Hill: too steep.","Painted Ladies at Alamo Square: steep park; skip or view from the car.","Any bar or 21+ venue, including Academy NightLife (21+)."],"checklist":{"confirm":["Buy Cal Academy tickets ahead (holiday days sell out) and reserve the planetarium show on the daily calendar.","Crissy Field beach wheelchair: the 5-day window has passed. Try a same-day request: 415-561-4700.","Steve Lacy tickets say Nov 25. Request accessible seating through Ticketmaster or find the ADA liaison at the door.","Bunny Cafe: book a Bunny Lounge time, ask about step-free entry and price.","KitTea: Friday hours, booking, step-free entry.","Pier 39 and Hana Zen Thanksgiving hours; elevator to Level 2.","Conservatory of Flowers light show running the week of Thanksgiving.","Music Concourse Garage holiday rate.","Trinity Place: $35 per night through YOTEL, no in-and-out.","Ferry Building and Miette Black Friday hours.","Brenda's or Tommy's on Thanksgiving if Pier 39 looks closed.","Lands End Lookout Thanksgiving status (overlook is outdoors either way)."],"pack":["Jacket for both (63°F, windy at the beach)","Wheelchair rain cover","Wheelchair charger","Phone chargers and a power bank","Disabled parking placard","Concert tickets on your phone","IDs","Small blanket for sunset","Umbrella or poncho for Wednesday","Snacks and water for the drive","Quarters for Musee Mecanique","Birthday card and pen (keep hidden)"]},"surprise":{"title":"Susie's early birthday (Dec 1)","ideas":[{"n":"Miette pastry box","d":"Ferry Building shop, weekdays 10 to 4. Grab a small box of macarons or a cupcake Friday while she browses next door.","cost":25},{"n":"Biology plush from the Academy store","d":"A penguin or ray plush, bought Thursday while she's in the rainforest.","cost":20},{"n":"Handwritten note","d":"Three lines: a favorite memory from this trip, one thing you admire about her, and happy birthday.","cost":0}],"when":"Friday at the Ferry Building with bay views, or Thursday night at Pier 39.","backup":"If Miette is closed, Uji Time taiyaki in Japantown or a Ghirardelli sundae."},"budget":{"limit":500,"gas":70,"birthday":45,"buffer":30,"hotelParking":70,"extraLabel":"Birthday surprise"}};
+</script>
+<script>
+(function(){
+"use strict";
+var T = window.TRIP;
+var KEY = "sftrip.v1";
+var S = load();
+function load(){ try{ var s = JSON.parse(localStorage.getItem(KEY)||"{}"); return s && typeof s==="object" ? s : {}; }catch(e){ return {}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+["sel","done","mood","list"].forEach(function(k){ if(!S[k] || typeof S[k]!=="object") S[k] = {}; });
+if(typeof S.gas!=="number") S.gas = T.budget.gas;
+if(!S.tab) S.tab = "days";
+if(!S.day) S.day = "wed";
+
+var MOODS = [["tired","Tired"],["rainy","Rainy"],["shopping","Shopping"],["nature","Nature"],["food","Food"],["photos","Photos"]];
+var SECTIONS = [["days","Days"],["food","Food"],["backup","Plan B"],["budget","Budget"],["list","List"]];
+var CATS = [["parking","Parking"],["gas","Gas"],["food","Food"],["museum","Museum and activities"],["cafes","Animal cafes and Japantown"],["treats","Treats and souvenirs"]];
+
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function money(n){ return "$" + Math.round(n); }
+function amap(o){ if(!o.map) return ""; return "https://maps.apple.com/?ll=" + o.map[0] + "," + o.map[1] + "&q=" + encodeURIComponent(o.n); }
+var ICON_MAP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>';
+var ICON_WEB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+var ICON_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function selIdx(b){ var i = S.sel[b.id]; return (typeof i==="number" && b.opts[i]) ? i : 0; }
+function cur(b){ return b.opts[selIdx(b)]; }
+function goLabel(o){
+  if(o.go==="home") return "No travel";
+  if(o.walk) return "Walkable from hotel";
+  if(o.go==="roll") return "Roll";
+  return "Car";
+}
+function costLabel(o){
+  var parts = [];
+  if(o.cost) parts.push(money(o.cost)); else parts.push("Free");
+  if(o.parkCost) parts.push("+ " + money(o.parkCost) + " parking");
+  return parts.join(" ");
+}
+
+/* ---------- budget ---------- */
+function budget(){
+  var c = {parking:T.budget.hotelParking, gas:S.gas, food:0, museum:0, cafes:0, treats:0};
+  var byDay = {};
+  T.days.forEach(function(d){
+    byDay[d.id] = 0;
+    d.blocks.forEach(function(b){
+      var o = cur(b);
+      if(o.cat && c.hasOwnProperty(o.cat)) c[o.cat] += o.cost||0;
+      c.parking += o.parkCost||0;
+      byDay[d.id] += (o.cost||0) + (o.parkCost||0);
+    });
+  });
+  var extras = (T.budget.birthday||0) + (T.budget.buffer||0);
+  var total = 0; Object.keys(c).forEach(function(k){ total += c[k]; }); total += extras;
+  return {c:c, byDay:byDay, total:total, left:T.budget.limit - total};
+}
+function trims(){
+  var out = [];
+  T.days.forEach(function(d){ d.blocks.forEach(function(b){
+    if(b.fixed) return;
+    var o = cur(b), oc = (o.cost||0)+(o.parkCost||0);
+    var best = null;
+    b.opts.forEach(function(a,i){ if(a.flag && /closed/i.test(a.flag)) return; var ac=(a.cost||0)+(a.parkCost||0); if(ac < oc && (!best || ac < best.c)) best = {i:i,c:ac,o:a}; });
+    if(best && oc-best.c >= 10) out.push({d:d, b:b, from:o, to:best.o, i:best.i, save:oc-best.c});
+  }); });
+  out.sort(function(a,b){ return b.save-a.save; });
+  return out.slice(0,5);
+}
+
+/* ---------- nav ---------- */
+function renderNav(){
+  var p = document.getElementById("sections");
+  p.innerHTML = SECTIONS.map(function(s){ return '<button type="button" data-tab="'+s[0]+'"'+(S.tab===s[0]?' aria-current="page"':'')+'>'+s[1]+'</button>'; }).join("");
+  var d = document.getElementById("days");
+  d.hidden = S.tab!=="days";
+  d.innerHTML = T.days.map(function(x){ return '<button type="button" data-day="'+x.id+'"'+(S.day===x.id?' aria-current="page"':'')+'><b>'+x.date.split(" ")[2]+'</b><span>'+x.tab+'</span></button>'; }).join("");
+}
+
+/* ---------- days ---------- */
+function moodTag(o, mood){ return mood && o.moods && o.moods.indexOf(mood)>-1; }
+function stopHTML(d, b, n, mood){
+  var o = cur(b), done = !!S.done[b.id];
+  var stopNo = ("0"+n).slice(-2);
+  var h = '<div class="stop'+(b.rest?' rest':'')+(done?' done':'')+'" id="b-'+b.id+'">';
+  h += '<div class="tagrow"><span class="t">'+esc(b.time)+'</span><span>'+(b.rest?'Rest':'Stop '+stopNo)+' · '+esc(b.label)+'</span><span>'+esc(goLabel(o))+(o.dist?' '+esc(o.dist):'')+'</span>'+(moodTag(o,mood)?'<span class="fit">Fits mood</span>':'')+'</div>';
+  h += '<div class="body"><h3>'+esc(o.n)+'</h3>';
+  if(o.addr) h += '<div class="sub">'+esc(o.addr)+'</div>';
+  if(o.d) h += '<p>'+esc(o.d)+'</p>';
+  var meta = [];
+  if(o.park) meta.push(['Parking', o.park]);
+  if(!b.fixed || o.cost || o.parkCost) meta.push(['Cost for two', costLabel(o)]);
+  if(o.acc) meta.push(['Access', o.acc]);
+  if(meta.length) h += '<div class="meta">'+meta.map(function(m){ return '<span><i>'+m[0]+'</i>'+esc(m[1])+'</span>'; }).join("")+'</div>';
+  if(b.note) h += '<div class="note"><span class="lbl">Heads up</span>'+esc(b.note)+'</div>';
+  if(o.flag) h += '<div class="note '+(o.v?'ok':'warn')+'"><span class="lbl">'+(o.v?'Checked':'Confirm before going')+'</span>'+esc(o.flag)+'</div>';
+  else if(!o.v) h += '<div class="note warn"><span class="lbl">Confirm before going</span>Hours, price or access not verified yet.</div>';
+  h += '<div class="acts"><button type="button" class="btn'+(done?'':' pri')+'" data-done="'+b.id+'" aria-pressed="'+done+'">'+ICON_CHECK+(done?'Done':'Mark done')+'</button>';
+  if(o.map) h += '<a class="btn" href="'+esc(amap(o))+'" target="_blank" rel="noopener">'+ICON_MAP+'Apple Maps</a>';
+  if(o.web) h += '<a class="btn" href="'+esc(o.web)+'" target="_blank" rel="noopener">'+ICON_WEB+'Website</a>';
+  h += '</div>';
+  var si = selIdx(b);
+  var alts = b.opts.map(function(a,i){ return {a:a,i:i}; }).filter(function(x){ return x.i!==si; });
+  if(alts.length){
+    h += '<div class="lbl2">Or swap for</div><ul class="alts">';
+    alts.forEach(function(x){
+      var a = x.a, hi = moodTag(a,mood);
+      var bits = [goLabel(a)]; if(a.dist) bits.push(a.dist); bits.push(costLabel(a)); if(!a.v) bits.push('<span class="cv">Confirm before going</span>');
+      h += '<li class="'+(hi?'hi':'')+'"><span class="n">'+esc(a.n)+'</span><span class="s">'+bits.map(function(t){ return t.indexOf("<span")===0?t:esc(t); }).join(" · ")+'</span>';
+      if(a.d) h += '<span class="d">'+esc(a.d)+(a.flag?' '+esc(a.flag):'')+'</span>';
+      h += '<span class="ab">'+(a.map?'<a class="btn" href="'+esc(amap(a))+'" target="_blank" rel="noopener" aria-label="Apple Maps for '+esc(a.n)+'">'+ICON_MAP+'Map</a>':'')+'<button type="button" class="btn" data-swap="'+b.id+'" data-i="'+x.i+'">Swap</button></span></li>';
+    });
+    h += '</ul>';
+  }
+  h += '</div></div>';
+  return h;
+}
+function renderDay(){
+  var d = T.days.filter(function(x){ return x.id===S.day; })[0] || T.days[0];
+  var idx = T.days.indexOf(d)+1, mood = S.mood[d.id]||"";
+  var h = '';
+  h += '<section class="hero gut rv"><div class="mrow"><span>Nov 25 to 27 · San Francisco</span><span>'+esc(T.hotel.name)+'</span></div>';
+  h += '<h1 class="giant">San Francisco,<br><em>Thanksgiving</em> trip.</h1></section>';
+  h += '<section class="sect gut rv"><div class="mrow"><span>Day 0'+idx+' · '+esc(d.date)+'</span><span>'+esc(d.weather)+'</span></div>';
+  h += '<h2 class="big">'+esc(d.title)+'</h2>';
+  if(d.holiday) h += '<div class="note warn"><span class="lbl">'+(d.id==="thu"?'Thanksgiving':'Heads up')+'</span>'+esc(d.holiday)+'</div>';
+  h += '<div class="moods" role="group" aria-label="Mood"><span class="lbl3">Mood check</span>'+MOODS.map(function(m){ return '<button type="button" class="mood" data-mood="'+m[0]+'" aria-pressed="'+(mood===m[0])+'">'+m[1]+'</button>'; }).join("")+'</div>';
+  if(mood){
+    var n = 0; d.blocks.forEach(function(b){ b.opts.forEach(function(o,i){ if(i!==selIdx(b) && moodTag(o,mood)) n++; }); });
+    h += '<div class="moodhint">'+n+' alternates fit this mood. They are marked with an orange bar below.</div>';
+  }
+  h += '<div class="line">';
+  var n2 = 0;
+  d.blocks.forEach(function(b){ if(!b.rest) n2++; h += stopHTML(d,b,n2,mood); });
+  h += '</div>';
+  var done = d.blocks.filter(function(b){ return S.done[b.id]; }).length;
+  h += '<div class="count">'+done+' of '+d.blocks.length+' stops done · Day spend '+money(budget().byDay[d.id])+'</div>';
+  if(d.id==="wed"||d.id==="fri") h += '<div class="foot">Hotel check-in 3 PM Wednesday, check-out 11 AM Friday. Car stays at Trinity Place Garage, 33 8th St, $35 a night with no in-and-out.</div>';
+  h += '</section>';
+  return h;
+}
+
+/* ---------- food ---------- */
+function renderFood(){
+  var h = '<section class="hero gut rv"><div class="mrow"><span>Food</span><span>Costs are for two</span></div><h1 class="giant">Every meal,<br><em>three ways.</em></h1>';
+  h += '<p class="lede">Susie eats cooked sushi rolls only, no raw fish. Tap Use this to put a spot into the day plan; the budget updates with it.</p></section>';
+  T.days.forEach(function(d){
+    h += '<section class="sect gut rv"><div class="mrow"><span>'+esc(d.date)+'</span><span>'+d.blocks.filter(function(b){return b.meal;}).length+' meals</span></div>';
+    d.blocks.filter(function(b){ return b.meal; }).forEach(function(b){
+      var si = selIdx(b);
+      h += '<div class="meal"><div class="mrow"><span class="t" style="color:var(--pg)">'+esc(b.time)+'</span><span>'+esc(b.label)+'</span></div><ul class="alts">';
+      b.opts.forEach(function(o,i){
+        var bits = [goLabel(o)]; if(o.dist) bits.push(o.dist); bits.push(costLabel(o)); if(!o.v) bits.push('<span class="cv">Confirm before going</span>');
+        h += '<li><span class="n"><span class="tier '+(o.tier||'')+'">'+esc(o.tier||'')+'</span>'+esc(o.n)+'</span><span class="s">'+bits.map(function(t){ return t.indexOf("<span")===0?t:esc(t); }).join(" · ")+'</span>';
+        if(o.d) h += '<span class="d">'+esc(o.d)+(o.flag?' '+esc(o.flag):'')+'</span>';
+        h += '<span class="ab">'+(o.map?'<a class="btn" href="'+esc(amap(o))+'" target="_blank" rel="noopener">'+ICON_MAP+'Map</a>':'')+(i===si?'<span class="picked" style="align-self:center">In plan</span>':'<button type="button" class="btn" data-swap="'+b.id+'" data-i="'+i+'">Use this</button>')+'</span></li>';
+      });
+      h += '</ul></div>';
+    });
+    h += '</section>';
+  });
+  return h;
+}
+
+/* ---------- backup ---------- */
+function renderBackup(){
+  var h = '<section class="hero gut rv"><div class="mrow"><span>Plan B</span><span>Thanksgiving, rain, low energy</span></div><h1 class="giant">If plans<br><em>change.</em></h1></section>';
+  var closed = [];
+  T.days.forEach(function(d){ d.blocks.forEach(function(b){ b.opts.forEach(function(o){ if(o.flag && /closed|not posted|unknown|likely/i.test(o.flag)) closed.push({d:d,o:o}); }); }); });
+  T.backups.forEach(function(o){ if(o.flag) closed.push({d:{tab:"Thu"},o:o}); });
+  h += '<section class="sect gut rv"><div class="mrow"><span>Thanksgiving and holiday hours</span><span>'+closed.length+' spots</span></div><ul class="alts">';
+  closed.forEach(function(x){ var o=x.o;
+    h += '<li><span class="n">'+esc(o.n)+'</span><span class="s">'+esc(x.d.tab)+' · '+(o.v?'<span class="okc">Checked</span>':'<span class="cv">Confirm before going</span>')+'</span><span class="d">'+esc(o.flag)+'</span><span class="ab">'+(o.map?'<a class="btn" href="'+esc(amap(o))+'" target="_blank" rel="noopener">'+ICON_MAP+'Map</a>':'')+'</span></li>';
+  });
+  h += '</ul></section>';
+  MOODS.forEach(function(m){
+    var list = T.backups.filter(function(o){ return o.moods.indexOf(m[0])>-1; });
+    if(!list.length) return;
+    h += '<section class="sect gut rv"><div class="mrow"><span>Extra spots · '+m[1]+'</span><span>'+list.length+'</span></div><ul class="alts">';
+    list.forEach(function(o){
+      h += '<li><span class="n">'+esc(o.n)+'</span><span class="s">'+(o.walk?'Walkable from hotel':'Car')+' · '+esc(o.dist)+(o.v?'':' · <span class="cv">Confirm before going</span>')+'</span><span class="d">'+esc(o.d)+' '+esc(o.acc)+'</span><span class="ab">'+(o.map?'<a class="btn" href="'+esc(amap(o))+'" target="_blank" rel="noopener">'+ICON_MAP+'Map</a>':'')+'</span></li>';
+    });
+    h += '</ul></section>';
+  });
+  h += '<section class="sect gut rv"><div class="mrow"><span>Skip these</span><span>Steep or 21+</span></div><ul class="rows">'+T.avoid.map(function(a){ return '<li><span>'+esc(a)+'</span></li>'; }).join("")+'</ul></section>';
+  return h;
+}
+
+/* ---------- budget ---------- */
+function renderBudget(){
+  var B = budget(), over = B.left < 0, pct = Math.min(100, B.total / T.budget.limit * 100);
+  var h = '<section class="hero gut rv"><div class="mrow"><span>Budget</span><span>Updates on every swap</span></div><h1 class="giant">'+money(T.budget.limit)+'<br><em>for both.</em></h1><p class="lede">Parking, gas, food, activities and treats. The hotel is paid separately.</p></section>';
+  h += '<section class="sect gut rv"><div class="nums"><div><b>'+money(B.total)+'</b><span>planned</span></div><div><b class="'+(over?'over':'')+'">'+(over?'-':'')+money(Math.abs(B.left))+'</b><span>'+(over?'over the $500':'left')+'</span></div></div>';
+  h += '<div class="track"><i class="'+(over?'over':'')+'" style="width:'+pct+'%"></i></div><ul class="rows">';
+  CATS.forEach(function(c){
+    var v = B.c[c[0]], small = '';
+    if(c[0]==="parking") small = 'Hotel garage 2 nights '+money(T.budget.hotelParking)+' plus stops';
+    if(c[0]==="gas"){
+      h += '<li><span>Gas<small>Round trip, about 380 miles</small></span><span class="stepper"><button type="button" data-gas="-5" aria-label="Less gas">-</button><b>'+money(v)+'</b><button type="button" data-gas="5" aria-label="More gas">+</button></span></li>';
+      return;
+    }
+    h += '<li><span>'+c[1]+(small?'<small>'+small+'</small>':'')+'</span><b>'+money(v)+'</b></li>';
+  });
+  h += '<li><span>'+esc(T.budget.extraLabel||"Extra treats")+'</span><b>'+money(T.budget.birthday||0)+'</b></li>';
+  h += '<li><span>Buffer<small>Tolls, a forgotten charger, surprises</small></span><b>'+money(T.budget.buffer||0)+'</b></li>';
+  h += '<li class="tot"><span>Total</span><b>'+money(B.total)+'</b></li></ul>';
+  h += '<div class="lbl2">By day</div><ul class="rows">'+T.days.map(function(d){ return '<li><span>'+esc(d.date)+'</span><b>'+money(B.byDay[d.id])+'</b></li>'; }).join("")+'</ul>';
+  h += '<p class="cap">By day counts stops only. Hotel parking, gas, extras and buffer are trip-wide.</p></section>';
+  var tr = trims();
+  if(tr.length){
+    h += '<section class="sect gut rv"><div class="mrow"><span>'+(over?'Ways to get under $500':'Ways to save more')+'</span><span>Tap to swap</span></div><ul class="alts">';
+    tr.forEach(function(t){
+      h += '<li><span class="n">Save '+money(t.save)+'</span><span class="s">'+esc(t.d.tab)+' '+esc(t.b.label)+'</span><span class="d">'+esc(t.from.n)+' to '+esc(t.to.n)+'</span><span class="ab"><button type="button" class="btn" data-swap="'+t.b.id+'" data-i="'+t.i+'">Swap</button></span></li>';
+    });
+    h += '</ul></section>';
+  }
+  return h;
+}
+
+/* ---------- list ---------- */
+function checkList(title, items, prefix){
+  var n = items.filter(function(_,i){ return S.list[prefix+i]; }).length;
+  var h = '<section class="sect gut rv"><div class="mrow"><span>'+title+'</span><span>'+n+' of '+items.length+'</span></div><ul class="checks">';
+  items.forEach(function(t,i){ var id = prefix+i;
+    h += '<li><label><input type="checkbox" data-list="'+id+'"'+(S.list[id]?' checked':'')+'><span>'+esc(t)+'</span></label></li>';
+  });
+  return h + '</ul></section>';
+}
+function renderList(){
+  var h = '<section class="hero gut rv"><div class="mrow"><span>Checklist</span><span>Saved on this device</span></div><h1 class="giant">Before<br><em>you go.</em></h1></section>';
+  h += checkList("Call or confirm", T.checklist.confirm, "c");
+  h += checkList("Pack", T.checklist.pack, "p");
+  if(T.surprise){
+    var s = T.surprise;
+    h += '<section class="sect gut"><details class="secret"><summary>Private notes</summary><div class="in"><h2 class="mid">'+esc(s.title)+'</h2><ul class="alts">';
+    s.ideas.forEach(function(i){ h += '<li><span class="n">'+esc(i.n)+'</span><span class="s">'+(i.cost?money(i.cost):'Free')+'</span><span class="d">'+esc(i.d)+'</span></li>'; });
+    h += '</ul><div class="note"><span class="lbl">When</span>'+esc(s.when)+'</div><div class="note"><span class="lbl">Backup</span>'+esc(s.backup)+'</div></div></details></section>';
+  }
+  h += '<section class="gut"><p class="foot">Hours and prices were checked online on Nov 22, 2026. Anything marked Confirm before going was not verified. Check-offs, swaps and moods save in this browser only.</p>';
+  h += '<button type="button" class="btn" data-reset="1">Reset swaps and check-offs</button></section>';
+  return h;
+}
+
+/* ---------- render + events ---------- */
+function render(keepScroll){
+  var y = window.scrollY;
+  renderNav();
+  var app = document.getElementById("app");
+  app.innerHTML = S.tab==="food"?renderFood():S.tab==="backup"?renderBackup():S.tab==="budget"?renderBudget():S.tab==="list"?renderList():renderDay();
+  if(keepScroll){ app.querySelectorAll(".rv").forEach(function(e){ e.classList.remove("rv"); }); window.scrollTo(0,y); }
+  else window.scrollTo(0,0);
+}
+document.addEventListener("click", function(e){
+  var t = e.target.closest("button"); if(!t) return;
+  if(t.dataset.tab){ S.tab = t.dataset.tab; save(); render(); return; }
+  if(t.dataset.day){ S.day = t.dataset.day; save(); render(); return; }
+  if(t.dataset.mood){ var d=S.day; S.mood[d] = S.mood[d]===t.dataset.mood ? "" : t.dataset.mood; save(); render(true); return; }
+  if(t.dataset.done){ S.done[t.dataset.done] = !S.done[t.dataset.done]; save(); render(true); return; }
+  if(t.dataset.swap){ S.sel[t.dataset.swap] = +t.dataset.i; save(); render(true); return; }
+  if(t.dataset.gas){ S.gas = Math.max(0, S.gas + (+t.dataset.gas)); save(); render(true); return; }
+  if(t.dataset.reset){ if(confirm("Reset all swaps, check-offs and moods?")){ S = {sel:{},done:{},mood:{},list:{},gas:T.budget.gas,tab:"days",day:"wed"}; save(); render(); } return; }
+});
+document.addEventListener("change", function(e){
+  var t = e.target; if(t.dataset && t.dataset.list){ S.list[t.dataset.list] = t.checked; save(); render(true); }
+});
+var root = document.documentElement;
+function applyTheme(){ if(S.theme) root.dataset.theme = S.theme; }
+applyTheme();
+document.getElementById("themeBtn").addEventListener("click", function(){
+  var dark = root.dataset.theme ? root.dataset.theme==="dark" : !matchMedia("(prefers-color-scheme: light)").matches;
+  S.theme = dark ? "light" : "dark"; save(); applyTheme();
+});
+render();
+})();
+</script>
+</body>
+</html>
