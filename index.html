@@ -15,7 +15,7 @@
 <style>
 :root{
   --bg:#000; --bg2:#121215; --fg:#FAFAFC; --hi:#FFF; --dim:#B4B4BB; --faint:rgba(255,255,255,.14); --rule:rgba(255,255,255,.24);
-  --pg:#FF6B4A; --on-pg:#000; --md:#C58AFF; --on-md:#000; --warn:#FFD60A; --ok:#30D158;
+  --pg:#FF6B4A; --on-pg:#000; --md:#FFFFFF; --on-md:#000; --warn:#FFD60A; --ok:#30D158;
   --glass-tint:rgba(28,28,32,0); --spec:rgba(255,255,255,.22); --spec-lo:rgba(0,0,0,.4); --rim:rgba(255,255,255,.18); --drop:rgba(0,0,0,.55);
   --display:-apple-system,"SF Pro Display",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
   --text:-apple-system,"SF Pro Text",BlinkMacSystemFont,"Helvetica Neue",system-ui,sans-serif;
@@ -398,7 +398,7 @@ function renderDay(){
   h += '<div class="moods" role="group" aria-label="Mood"><span class="lbl3">Mood check</span>'+MOODS.map(function(m){ return '<button type="button" class="mood" data-mood="'+m[0]+'" aria-pressed="'+(mood===m[0])+'">'+m[1]+'</button>'; }).join("")+'</div>';
   if(mood){
     var n = 0; d.blocks.forEach(function(b){ b.opts.forEach(function(o,i){ if(i!==selIdx(b) && moodTag(o,mood)) n++; }); });
-    h += '<div class="moodhint">'+n+' alternates fit this mood. They glow purple below.</div>';
+    h += '<div class="moodhint">'+n+' alternates fit this mood. They are highlighted below.</div>';
   }
   h += '<div class="line">';
   var n2 = 0;
