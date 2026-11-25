@@ -448,17 +448,17 @@ var NOTES = window.NOTES || {};
 function infoBtn(ref, name){ return '<button type="button" class="info" data-open="'+ref+'" aria-label="Notes about '+esc(name)+'">'+ICON_INFO+'</button>'; }
 function miles(a,b){ var R=3958.8, r=Math.PI/180, dLa=(b[0]-a[0])*r, dLo=(b[1]-a[1])*r;
   var x=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dLo/2)*Math.sin(dLo/2); return 2*R*Math.asin(Math.sqrt(x)); }
-/* Rough estimate: roll at about 2.5 mph on 1.3x street distance; drive at about 15 mph in the city (55 mph past 20 miles) on 1.35x, plus 5 min to park.
+/* Rough estimate: roll at about 4.5 mph (walking pace with Susie) on 1.3x street distance; drive at about 15 mph in the city (55 mph past 20 miles) on 1.35x, plus 5 min to park.
    Shows both when rolling is under about 75 min, with the better way first. */
 function fmtMin(x){ return x>=90 ? (Math.round(x/6)/10)+" hr" : Math.max(2,Math.round(x))+" min"; }
 function leg(from, to){
   if(!from || !to || !from.map || !to.map) return null;
   var m = miles(from.map, to.map);
   if(m < 0.05) return {txt:"Same place", m:0, roll:0, drive:0, mode:"roll"};
-  var rd = m*1.3, rmin = rd/2.5*60;
+  var rd = m*1.3, rmin = rd/4.5*60;
   var dd = m > 20 ? m*1.2 : m*1.35, dmin = dd > 20 ? dd/55*60 + 10 : dd/15*60 + 5;
   var canRoll = !to.carOnly && rmin <= 75;
-  var mode = (rd <= 1.2 && !to.carOnly && (to.go!=="drive" || m < 0.5)) ? "roll" : "drive";
+  var mode = (rd <= 1.5 && !to.carOnly && (to.go!=="drive" || m < 0.5)) ? "roll" : "drive";
   var r = "Roll ~"+fmtMin(rmin), d = "Drive ~"+fmtMin(dmin), txt;
   if(!canRoll) txt = d;
   else txt = mode==="roll" ? r+" \u00b7 "+d : d+" \u00b7 "+r;
