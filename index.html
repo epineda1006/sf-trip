@@ -304,6 +304,68 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (prefers-reduced-transparency:reduce){.fglass{background:var(--bg2);-webkit-backdrop-filter:none;backdrop-filter:none}}
 @media (prefers-contrast:more){:root{--rule:rgba(255,255,255,.5);--dim:#D6D6DB}}
+
+/* ---------- v2 concept: bigger type, clear headers, next-up card ---------- */
+.v2 body{font-size:16.5px}
+.v2 .hero{padding-block:20px 4px}
+.v2 .giant{font-size:clamp(28px,4vw,48px)}
+.v2 .h-sec{margin:30px 0 10px;font:700 21px/1.2 var(--display);letter-spacing:-.02em;color:var(--hi);display:flex;align-items:baseline;gap:10px}
+.v2 .h-sec small{font:500 13px var(--text);color:var(--dim);letter-spacing:0}
+.v2 .h-sec::before{content:"";flex:none;width:4px;height:18px;border-radius:2px;background:var(--pg);align-self:center}
+.v2 .dayh{margin:6px 0 0;font:750 clamp(30px,4vw,44px)/1.05 var(--display);letter-spacing:-.035em;color:var(--hi)}
+.v2 .daysub{margin:6px 0 0;font:600 18px/1.3 var(--display);color:var(--fg)}
+.v2 .daywx{margin:6px 0 0;font-size:15px;color:var(--dim)}
+.v2 .note{font-size:15px}
+.v2 .note .lbl{font-size:12px;margin-bottom:2px}
+.v2 .nextc{margin-top:4px;padding:18px;border-radius:18px;background:var(--bg2);box-shadow:inset 0 0 0 1.5px var(--pg)}
+.v2 .nextc .k{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--pg)}
+.v2 .nextc .t{margin-top:8px;font:700 22px var(--mono);color:var(--time)}
+.v2 .nextc h3{margin:4px 0 0;font:750 28px/1.1 var(--display);letter-spacing:-.03em;color:var(--hi)}
+.v2 .nextc .lb{margin-top:4px;font:600 14px var(--text);color:var(--dim)}
+.v2 .nextc .go{margin-top:12px;display:flex;align-items:center;gap:10px;font:700 17px var(--text);color:var(--hi)}
+.v2 .nextc .go .ic{flex:none;width:30px;height:30px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--pg);display:grid;place-items:center}
+.v2 .nextc .go svg{width:15px;height:15px;fill:none;stroke:var(--pg);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.v2 .nextc .go small{font:500 14px var(--text);color:var(--dim)}
+.v2 .nextc .key{margin:12px 0 0;font-size:16px;color:var(--fg)}
+.v2 .nextc .first{margin:12px 0 0;font-size:15px}
+.v2 .nextc .ln{font-size:15px;color:var(--fg)}
+.v2 .nextc .acts{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.v2 .ln{font-size:15px;line-height:1.5}
+.v2 .ln i{display:block;font-size:12px;margin:0 0 2px}
+.v2 .exp .key{font-size:16px}
+.v2 .chip{font-size:13.5px;padding:4px 11px}
+.v2 .btn{font-size:14.5px;padding:10px 16px;min-height:42px}
+.v2 .row{min-height:60px;padding:10px 0}
+.v2 .row .tm{width:72px;font-size:14px}
+.v2 .row .lb{font-size:12px}
+.v2 .row b{font-size:18.5px}
+.v2 .row .pr{font-size:13.5px}
+.v2 .gap{font-size:15.5px}
+.v2 .gap .fr{font-size:14px}
+.v2 .first{font-size:14.5px}
+.v2 .first b,.v2 .fz{font-size:12px}
+.v2 .first{margin-left:84px}
+.v2 .exp{padding-left:84px}
+.v2 .mood{font-size:13px;padding:9px 14px}
+.v2 .crow .mood{font-size:13px}
+.v2 .moods .lbl3{display:none}
+.v2 .moods{margin-top:0}
+.v2 .count{font-size:13px;margin-top:14px}
+.v2 .foot{font-size:14px}
+.v2 .alts .n{font-size:17px}
+.v2 .alts .s{font-size:12.5px}
+.v2 .alts .d,.v2 .alts .eat{font-size:15px}
+.v2 .mrow{font-size:12.5px}
+.v2 .tabbar b{font-size:17px}
+.v2 .tabbar span{font-size:12px}
+.v2 .pill button{font-size:14px}
+@media (max-width:560px){
+  .v2 .row .tm{width:64px;font-size:13.5px}
+  .v2 .row b{font-size:18px}
+  .v2 .first,.v2 .exp{margin-left:0;padding-left:0}
+  .v2 .nextc{padding:16px;margin-inline:-4px}
+  .v2 .nextc h3{font-size:26px}
+}
 </style>
 </head>
 <body>
@@ -322,6 +384,8 @@ window.NOTES = {"Drive Fresno to San Francisco":{"like":["A playlist for the Ste
 (function(){
 "use strict";
 var T = window.TRIP;
+var V2 = /concept/.test(location.pathname) || /[?&]v2\b/.test(location.search);
+if(V2) document.documentElement.classList.add("v2");
 var KEY = "sftrip.v1";
 var S = load();
 function load(){ try{ var s = JSON.parse(localStorage.getItem(KEY)||"{}"); return s && typeof s==="object" ? s : {}; }catch(e){ return {}; } }
@@ -470,7 +534,7 @@ function stopHTML(d, b, n, mood, bi, nextId){
   var alts = b.opts.map(function(a,i){ return {a:a,i:i}; }).filter(function(x){ return x.i!==si; });
   var altFits = alts.filter(function(x){ return moodTag(x.a,mood); }).length;
   var isNext = b.id===nextId;
-  var open = OPEN[b.id]!==undefined ? OPEN[b.id] : isNext;
+  var open = OPEN[b.id]!==undefined ? OPEN[b.id] : (isNext && !V2);
   var warn = flagWarn(o);
   var h = '';
   if(L) h += '<div class="gap"><span class="ic">'+ICON_LEG+'</span><b>'+esc(L.txt.replace(/^About /,"~"))+'</b><span class="fr">from '+esc(L.from)+'</span></div>';
@@ -515,7 +579,64 @@ function stopHTML(d, b, n, mood, bi, nextId){
   h += '</div></div>';
   return h;
 }
+function nextCard(d, b, bi){
+  var o = cur(b), L = legFor(d, bi, o), done = !!S.done[b.id], si = selIdx(b);
+  var h = '<div class="nextc"><div class="k">Next up</div><div class="t">'+esc(b.time)+'</div><h3>'+esc(o.n)+'</h3><div class="lb">'+esc(b.label)+'</div>';
+  if(L) h += '<div class="go"><span class="ic">'+ICON_LEG+'</span><span>'+esc(L.txt.replace(/^About /,"~"))+' <small>from '+esc(L.from)+'</small></span></div>';
+  var k = keyLine(o); if(k) h += '<p class="key">'+esc(k)+'</p>';
+  if(o.first && !done) h += '<div class="first"><b>Do first</b>'+esc(o.first)+'</div>';
+  if(o.parkHow||o.park) h += '<p class="ln"><i>Parking</i>'+esc(o.parkHow||o.park)+'</p>';
+  if(o.eat) h += '<p class="ln"><i>Order</i>'+esc(o.eat)+'</p>';
+  h += '<div class="acts"><button type="button" class="btn pri" data-done="'+b.id+'" aria-pressed="'+done+'">'+ICON_CHECK+'Mark done</button>'+mapBtns(o, true)+'<button type="button" class="btn" data-open="o:'+b.id+':'+si+'">'+ICON_INFO+'Details</button></div>';
+  return h + '</div>';
+}
+function tmin(t){ var m = /(\d{1,2}):(\d{2})\s*(AM|PM)/.exec(t||""); if(!m) return -1; var h = (+m[1])%12 + (m[3]==="PM"?12:0); return h*60 + (+m[2]); }
+/* On the trip day itself, skip stops whose next stop has already started; otherwise the first stop not marked done. */
+function nextByClock(d){
+  var open = d.blocks.filter(function(b){ return !S.done[b.id]; });
+  var n = ptNow(), dk = ({25:"wed",26:"thu",27:"fri"})[n.d];
+  if(n.m!==11 || dk!==d.id) return open[0];
+  var p = new Intl.DateTimeFormat("en-US",{timeZone:"America/Los_Angeles",minute:"2-digit"}).format(new Date());
+  var now = n.h*60 + (+p||0);
+  for(var i=0;i<d.blocks.length;i++){ var b = d.blocks[i]; if(S.done[b.id]) continue; var nx = d.blocks[i+1]; if(!nx || tmin(nx.time) > now) return b; }
+  return open[open.length-1];
+}
+var DAYN = {wed:"Wednesday, Nov 25", thu:"Thursday, Nov 26", fri:"Friday, Nov 27"};
+function renderDayV2(){
+  var d = T.days.filter(function(x){ return x.id===S.day; })[0] || T.days[0];
+  var mood = S.mood[d.id]||"";
+  var h = '';
+  h += '<section class="hero gut rv"><div class="mrow"><span>Nov 25 to 27 · San Francisco</span><span>'+esc(T.hotel.name)+'</span></div>';
+  if(T.callout) h += '<h2 class="h-sec">Before you go</h2><div class="note warn">'+esc(T.callout)+'</div>';
+  h += '</section>';
+  h += '<section class="sect gut rv">';
+  h += '<h1 class="dayh">'+esc(DAYN[d.id]||d.date)+(d.id==="thu"?' <span style="color:var(--pg)">Thanksgiving</span>':'')+'</h1>';
+  h += '<p class="daysub">'+esc(d.title)+'</p><p class="daywx">'+esc(d.weather)+'</p>';
+  if(d.storm) h += '<div class="note warn"><span class="lbl">Storm</span>'+esc(d.storm)+'</div>';
+  if(d.holiday) h += '<div class="note warn"><span class="lbl">'+(d.id==="thu"?'Thanksgiving':'Heads up')+'</span>'+esc(d.holiday)+'</div>';
+  var nextB = nextByClock(d);
+  if(nextB){ h += '<h2 class="h-sec">Next up</h2>' + nextCard(d, nextB, d.blocks.indexOf(nextB)); }
+  else h += '<h2 class="h-sec">All done for today</h2>';
+  var done = d.blocks.filter(function(b){ return S.done[b.id]; }).length;
+  h += '<h2 class="h-sec">Today\'s plan <small>'+d.blocks.length+' stops · '+done+' done</small></h2>';
+  h += '<div class="glance" style="margin-top:0">';
+  d.blocks.forEach(function(b,bi){ h += stopHTML(d,b,0,mood,bi,nextB?nextB.id:""); });
+  h += '</div>';
+  h += '<div class="count">Day spend '+money(budget().byDay[d.id])+'</div>';
+  h += '<h2 class="h-sec">Craving something? <small>'+(d.id==="thu"?'hotel before 10 AM, Academy after':'nearest to the hotel')+'</small></h2>' + craveRow(d.id);
+  h += '<h2 class="h-sec">Mood check <small>highlights swaps that fit</small></h2>';
+  h += '<div class="moods" role="group" aria-label="Mood">'+MOODS.map(function(m){ return '<button type="button" class="mood" data-mood="'+m[0]+'" aria-pressed="'+(mood===m[0])+'">'+m[1]+'</button>'; }).join("")+'</div>';
+  if(mood){
+    var n = 0; d.blocks.forEach(function(b){ b.opts.forEach(function(o,i){ if(i!==selIdx(b) && moodTag(o,mood)) n++; }); });
+    h += '<div class="moodhint">'+n+' swaps fit this mood. They are highlighted in Today\'s plan.</div>';
+  }
+  if(d.extras) h += '<h2 class="h-sec">Optional extra</h2><div class="note">'+esc(d.extras.replace(/^Optional extra[^:]*: /,""))+' <button type="button" class="lnk" data-tab="places" data-jumpto="pc-extras">See extras</button></div>';
+  if(d.id==="wed"||d.id==="fri") h += '<div class="foot">Hotel check-in 3 PM Wednesday, check-out 11 AM Friday. Car stays at the Trinity Place garage, 33 8th St, $40 per 24 hours with free re-entry, paid at the garage.</div>';
+  h += '</section>';
+  return h;
+}
 function renderDay(){
+  if(V2) return renderDayV2();
   var d = T.days.filter(function(x){ return x.id===S.day; })[0] || T.days[0];
   var idx = T.days.indexOf(d)+1, mood = S.mood[d.id]||"";
   var h = '';
