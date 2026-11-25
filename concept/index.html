@@ -360,7 +360,7 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 .v2 .tabbar span{font-size:12px}
 .v2 .pill button{font-size:14px}
 @media (max-width:560px){
-  .v2 .row .tm{width:64px;font-size:13.5px}
+  .v2 .row .tm{width:72px;font-size:13.5px;white-space:nowrap}
   .v2 .row b{font-size:18px}
   .v2 .first,.v2 .exp{margin-left:0;padding-left:0}
   .v2 .nextc{padding:16px;margin-inline:-4px}
@@ -544,7 +544,7 @@ function stopHTML(d, b, n, mood, bi, nextId){
   h += '<span class="nm"><span class="lb">'+(done?'Done · ':'')+esc(b.label)+(isNext?' <i class="nx">Next</i>':'')+(fits?' <i class="ft">Fits mood</i>':'')+(!fits && altFits?' <i class="ft o">'+altFits+' swap'+(altFits>1?'s':'')+' fit</i>':'')+'</span><b>'+esc(o.n)+'</b></span>';
   var pt = priceTag(o); if(pt) h += '<span class="pr'+(/^Paid/.test(pt)?' paid':'')+'">'+esc(pt)+'</span>';
   h += '<span class="dot '+(warn?'w':'k')+'" title="'+(warn?'Confirm before going':'Checked')+'"></span><span class="chev">'+ICON_CHEV+'</span></button>';
-  if(o.first && !done) h += '<div class="first"><b>Do first</b>'+esc(o.first)+'</div>';
+  if(o.first && !done && !(V2 && isNext)) h += '<div class="first"><b>Do first</b>'+esc(o.first)+'</div>';
   h += '<div class="exp">';
   var k = keyLine(o); if(k) h += '<p class="key">'+esc(k)+'</p>';
   var chips = [];
@@ -581,7 +581,7 @@ function stopHTML(d, b, n, mood, bi, nextId){
 }
 function nextCard(d, b, bi){
   var o = cur(b), L = legFor(d, bi, o), done = !!S.done[b.id], si = selIdx(b);
-  var h = '<div class="nextc"><div class="k">Next up</div><div class="t">'+esc(b.time)+'</div><h3>'+esc(o.n)+'</h3><div class="lb">'+esc(b.label)+'</div>';
+  var h = '<div class="nextc"><div class="t" style="margin-top:0">'+esc(b.time)+'</div><h3>'+esc(o.n)+'</h3><div class="lb">'+esc(b.label)+'</div>';
   if(L) h += '<div class="go"><span class="ic">'+ICON_LEG+'</span><span>'+esc(L.txt.replace(/^About /,"~"))+' <small>from '+esc(L.from)+'</small></span></div>';
   var k = keyLine(o); if(k) h += '<p class="key">'+esc(k)+'</p>';
   if(o.first && !done) h += '<div class="first"><b>Do first</b>'+esc(o.first)+'</div>';
