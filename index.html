@@ -370,7 +370,9 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 .v2 .ctl .pill{align-self:flex-start;flex-wrap:wrap}
 .v2 .grp{margin:18px 0 0;font:700 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--pg)}
 .v2 .fi .s b{color:var(--hi);font-weight:700}
-.v2 .fi .hrs{display:block;margin-top:2px}
+.v2 .fi .hrs{display:block;margin-top:3px;text-transform:none;font:500 14px/1.4 var(--text);letter-spacing:0;color:var(--fg)}
+.v2 .gap{flex-wrap:wrap;row-gap:2px}
+.v2 .gap b{white-space:nowrap}
 .v2 .fi .hrs.no{color:var(--warn)}
 .v2 .ue svg{stroke:var(--ok)}
 .v2 .more{margin-top:14px}
@@ -699,7 +701,7 @@ function todayKey(){ return tripToday() || S.day || "wed"; }
 var DAYS3 = {wed:"Wed", thu:"Thu", fri:"Fri"};
 function craveRow(id){
   var f = dayFrom(id);
-  return '<div class="moods crow" role="group" aria-label="Craving">'+CRAVES.map(function(c){ return '<button type="button" class="mood" data-crave="'+c[0]+'" data-cfrom="'+f+'" data-fday="'+id+'" data-go="1">'+c[1]+'</button>'; }).join("")+'<button type="button" class="mood" data-crave="" data-ftime="late" data-cfrom="'+f+'" data-fday="'+id+'" data-go="1">Late night</button></div>';
+  return '<div class="moods crow" role="group" aria-label="Craving">'+CRAVES.map(function(c){ return '<button type="button" class="mood" data-crave="'+c[0]+'" data-cfrom="'+f+'" data-fday="'+id+'" data-go="1">'+c[1]+'</button>'; }).join("")+'<button type="button" class="mood" data-crave="" data-ftime="late" data-cfrom="hotel" data-fday="'+id+'" data-go="1">Late night</button></div>';
 }
 /* ---------- hours ---------- */
 function toMin(h, mi, mer){ return (h%12 + (/pm/i.test(mer)?12:0))*60 + mi; }
