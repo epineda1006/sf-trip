@@ -175,7 +175,8 @@ button,a,label,input{touch-action:manipulation;-webkit-tap-highlight-color:trans
 .sect[id^="pc-"]{scroll-margin-top:70px}
 .alts .ab{flex-wrap:wrap;justify-content:flex-end}
 .alts .ab .picked{white-space:nowrap}
-.alts.pl .ab{justify-content:flex-start}
+.alts.pl li{grid-template-columns:minmax(0,1fr)}
+.alts.pl .ab{grid-row:auto;grid-column:1;justify-content:flex-start;margin-top:6px}
 @media (max-width:520px){.alts.pl .ab .btn{flex:none}}
 @media (max-width:520px){.alts li{grid-template-columns:1fr}.alts .ab{grid-row:auto;grid-column:1;margin-top:6px}}
 
